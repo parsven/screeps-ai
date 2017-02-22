@@ -142,17 +142,17 @@ module.exports.loop = function () {
             module.exports.makeUpgrader();
         } else if(repairers < 0) {
             module.exports.makeRepairer();
-        } else if(towerchargers < 1) {
+        } else if(towerchargers < 2) {
             module.exports.makeTowercharger();
         } else if(harvesters2 < 0) {
             module.exports.makeHarvester2();  
-        } else if(constructionSitesE26S63.length > 0 && builders < 2) {
+        } else if(constructionSitesE26S63.length > 0 && builders < 0) {
             module.exports.makeBuilder();
         } else if(upgraders2 < 3) {
             module.exports.makeUpgrader2();
         } else if(/*constructionSitesE26S63.length == 0*/ upgraders3 < 1) {
             module.exports.makeUpgrader3();
-        } else if(remoteMineAndBuilders < 1) {
+        } else if(remoteMineAndBuilders < 2) {
             module.exports.makeRemoteMineAndBuilder();
         }
         
