@@ -7,6 +7,7 @@ const roleBuilder = require('role.builder');
 const roleRepairer = require('role.repairer');
 const roleTowercharger = require('role.towercharger');
 const roleRemoteMineAndBuilder = require('role.remoteMineAndBuild');
+const roleClaimer = require('role.claimer');
 
 const _ = require('lodash');
 
@@ -70,6 +71,9 @@ module.exports.makeTowercharger = function() {
     build('towercharger', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
 };
 
+module.exports.makeClaimer = function() {
+    build('claimer', [MOVE,MOVE,CLAIM]);
+};
 
 const towerAttack = function(tower) {
     const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -138,7 +142,7 @@ module.exports.loop = function () {
 
     const tower = Game.getObjectById('58a84e66120c7b1c6451f132');
     if(tower) {
-        if(!towerAttack(tower) && Game.time % 3 == 0) {
+        if(!towerAttack(tower) && Game.time % 2 == 0) {
             towerRepair(tower);
         }
     } else {
@@ -156,6 +160,7 @@ module.exports.loop = function () {
         const upgraders3 = cntCreepsOfType('upgrader3');
         const harvesters2 = cntCreepsOfType('harvester2');
         const remoteMineAndBuilders = cntCreepsOfType('remoteMineAndBuilder');
+        const claimers = cntCreepsOfType('claimer');
 
         const constructionSitesE26S63 = Object.keys(Game.constructionSites).filter((siteKey) => {
             return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E26S63';
@@ -163,7 +168,7 @@ module.exports.loop = function () {
 
         console.log('energy:' + Game.rooms['E26S63'].energyAvailable + 'repairers:' + repairers + ' harvesters:' + harvesters + ' upgraders:' + upgraders + ' builders:' + builders + ' towerchargers:'+ towerchargers+ 'upgraders2:' + upgraders2 + ' harvesters2:' + harvesters2);
 
-        if(harvesters < 3 &&  Game.rooms['E26S63'].energyAvailable < 1000) {
+        if(harvesters < 3 &&  Game.rooms['E26S63'].energyAvailable < 1300) {
             module.exports.makeHarvester();
         } else if(upgraders < 2) {
             module.exports.makeUpgrader();
@@ -179,6 +184,8 @@ module.exports.loop = function () {
             module.exports.makeUpgrader2();
         } else if(/*constructionSitesE26S63.length == 0*/ upgraders3 < 1) {
             module.exports.makeUpgrader3();
+        } else if(claimers < 2) {
+            module.exports.makeClaimer();
         } else if(remoteMineAndBuilders < 2) {
             module.exports.makeRemoteMineAndBuilder();
         }
@@ -226,7 +233,9 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == 'remoteMineAndBuilder') {
             roleRemoteMineAndBuilder.run(creep);
-            //    roleBuilder.run(creep);
+        }
+        if (creep.memory.role == 'claimer') {
+            roleClaimer.run(creep);
         }
     }
 };
