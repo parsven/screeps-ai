@@ -1,0 +1,25 @@
+{
+  "name": "screeps-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parsven/screeps-ai.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parsven/screeps-ai/issues"
+  },
+  "homepage": "https://github.com/parsven/screeps-ai#readme",
+
+  "dependencies" :
+  { "grunt" : "latest"
+  , "grunt-screeps" : "latest"
+  , "lodash" : "latest"
+  }
+}
