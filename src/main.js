@@ -102,6 +102,32 @@ const towerRepair = function(tower) {
     }
 };
 
+
+
+
+const roleDefs = {
+    Harvester: {rolename: 'harvester', factory: module.exports.makeHarvester}
+};
+
+
+const desiredCreepers = {
+    distribution: [
+        {role: 'Harvester', max: 3, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
+        ,{role: roleHarvester, max: 3, criteria: () => true }
+
+
+    ],
+    fallback: { role: 'Miniharvester',
+        max:2,
+        criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 && Game.rooms['E26S63'].c}
+
+};
+
+
+
+
+
+
 module.exports.loop = function () {
 // Garbage collect memory from dead creeps.
     for(var i in Memory.creeps) {
