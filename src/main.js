@@ -47,7 +47,7 @@ module.exports.makeHarvester = function() {
 };
 
 module.exports.makeHarvester2 = function() {
-    build('harvester2', [MOVE,MOVE,WORK,WORK,CARRY]);
+    build('harvester2', [MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
 };
 
 module.exports.makeUpgrader = function() {
@@ -145,7 +145,7 @@ module.exports.loop = function () {
             module.exports.makeRepairer();
         } else if(towerchargers < 2) {
             module.exports.makeTowercharger();
-        } else if(harvesters2 < 0) {
+        } else if(harvesters2 < 2) {
             module.exports.makeHarvester2();  
         } else if(constructionSitesE26S63.length > 0 && builders < 0) {
             module.exports.makeBuilder();

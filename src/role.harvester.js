@@ -16,7 +16,6 @@ var roleHarvester = {
                 }
             });
             if(targets.length > 0) {
-//                var target = targets[0];
                 var target = creep.pos.findClosestByRange(targets);
   
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
