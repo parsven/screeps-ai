@@ -1,5 +1,6 @@
 const roleHarvester = require('role.harvester');
 const roleHarvester2 = require('role.harvester2');
+const roleHarvesterRemote = require('role.harvesterRemote');
 const roleUpgrader = require('role.upgrader');
 const roleUpgrader2 = require('role.upgrader2');
 const roleUpgrader3 = require('role.upgrader3');
@@ -51,8 +52,13 @@ module.exports.makeHarvester2 = function() {
     build('harvester2', [MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
 };
 
+module.exports.makeHarvesterRemote = function() {
+    build('harvesterRemote', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
+};
+
 module.exports.makeUpgrader = function() {
-    build('upgrader', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+//    build('upgrader', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    build('upgrader', [MOVE,WORK,CARRY]);
 };
 
 module.exports.makeUpgrader2 = function() {
@@ -159,6 +165,7 @@ module.exports.loop = function () {
         const upgraders2 = cntCreepsOfType('upgrader2');
         const upgraders3 = cntCreepsOfType('upgrader3');
         const harvesters2 = cntCreepsOfType('harvester2');
+        const harvestersRemote = cntCreepsOfType('harvesterRemote');
         const remoteMineAndBuilders = cntCreepsOfType('remoteMineAndBuilder');
         const claimers = cntCreepsOfType('claimer');
 
@@ -170,23 +177,25 @@ module.exports.loop = function () {
 
         if(harvesters < 3 &&  Game.rooms['E26S63'].energyAvailable < 1300) {
             module.exports.makeHarvester();
-        } else if(upgraders < 2) {
+        } else if(upgraders < 1) {
             module.exports.makeUpgrader();
         } else if(repairers < 0) {
             module.exports.makeRepairer();
         } else if(towerchargers < 2 && tower.energy < 900) {
             module.exports.makeTowercharger();
-        } else if(harvesters2 < 2) {
-            module.exports.makeHarvester2();  
-        } else if(constructionSitesE26S63.length > 0 && builders < 0) {
+        } else if(harvesters2 < 3) {
+            module.exports.makeHarvester2();
+        } else if(harvestersRemote < 3) {
+            module.exports.makeHarvesterRemote();
+        } else if(constructionSitesE26S63.length > 0 && builders < 2) {
             module.exports.makeBuilder();
-        } else if(upgraders2 < 3) {
+        } else if(upgraders2 < 0) {
             module.exports.makeUpgrader2();
-        } else if(/*constructionSitesE26S63.length == 0*/ upgraders3 < 1) {
+        } else if(/*constructionSitesE26S63.length == 0*/ upgraders3 < 0) {
             module.exports.makeUpgrader3();
         } else if(claimers < 2) {
             module.exports.makeClaimer();
-        } else if(remoteMineAndBuilders < 2) {
+        } else if(remoteMineAndBuilders < 1) {
             module.exports.makeRemoteMineAndBuilder();
         }
         
@@ -212,6 +221,9 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == 'harvester2') {
             roleHarvester2.run(creep);
+        }
+        if (creep.memory.role == 'harvesterRemote') {
+            roleHarvesterRemote.run(creep);
         }
         if (creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);
