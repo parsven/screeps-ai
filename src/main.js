@@ -93,7 +93,7 @@ const towerRepair = function(tower) {
                 filter: (structure) => structure.hits < 300000 && 
                 (structure.structureType === STRUCTURE_WALL || structure.structureType === STRUCTURE_RAMPART)
         });
-        if(damagedWalls.length > 0) {
+        if(damagedWalls.length > 0 && tower.energy > 700) {
             //var item = damagedWalls[Math.floor(Math.random()*damagedWalls.length)];
             const minHits = Math.min.apply(Math,damagedWalls.map(function(o){return o.hits;}));
             const item = damagedWalls.find(function(o){ return o.hits == minHits; });
@@ -143,7 +143,7 @@ module.exports.loop = function () {
             module.exports.makeUpgrader();
         } else if(repairers < 0) {
             module.exports.makeRepairer();
-        } else if(towerchargers < 2) {
+        } else if(towerchargers < 2 && tower.energy < 900) {
             module.exports.makeTowercharger();
         } else if(harvesters2 < 2) {
             module.exports.makeHarvester2();  
