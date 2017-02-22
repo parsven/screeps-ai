@@ -53,7 +53,7 @@ module.exports.makeHarvester2 = function() {
 };
 
 module.exports.makeHarvesterRemote = function() {
-    build('harvesterRemote', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
+    build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
 };
 
 module.exports.makeUpgrader = function() {
@@ -175,25 +175,25 @@ module.exports.loop = function () {
 
         console.log('energy:' + Game.rooms['E26S63'].energyAvailable + 'repairers:' + repairers + ' harvesters:' + harvesters + ' upgraders:' + upgraders + ' builders:' + builders + ' towerchargers:'+ towerchargers+ 'upgraders2:' + upgraders2 + ' harvesters2:' + harvesters2);
 
-        if(harvesters < 3 &&  Game.rooms['E26S63'].energyAvailable < 1300) {
+        if(harvesters < 2 &&  Game.rooms['E26S63'].energyAvailable < 1300) {
             module.exports.makeHarvester();
         } else if(upgraders < 1) {
             module.exports.makeUpgrader();
         } else if(repairers < 0) {
             module.exports.makeRepairer();
-        } else if(towerchargers < 2 && tower.energy < 900) {
+        } else if(towerchargers < 1 && tower.energy < 900) {
             module.exports.makeTowercharger();
-        } else if(harvesters2 < 3) {
+        } else if(harvesters2 < 2) {
             module.exports.makeHarvester2();
-        } else if(harvestersRemote < 3) {
+        } else if(harvestersRemote < 2) {
             module.exports.makeHarvesterRemote();
         } else if(constructionSitesE26S63.length > 0 && builders < 2) {
             module.exports.makeBuilder();
-        } else if(upgraders2 < 0) {
+        } else if(upgraders2 < 2) {
             module.exports.makeUpgrader2();
-        } else if(/*constructionSitesE26S63.length == 0*/ upgraders3 < 0) {
+        } else if(/*constructionSitesE26S63.length == 0*/ upgraders3 < 1) {
             module.exports.makeUpgrader3();
-        } else if(claimers < 2) {
+        } else if(claimers < 3) {
             module.exports.makeClaimer();
         } else if(remoteMineAndBuilders < 1) {
             module.exports.makeRemoteMineAndBuilder();
