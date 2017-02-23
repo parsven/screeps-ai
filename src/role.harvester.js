@@ -19,6 +19,9 @@ var roleHarvester = {
                         structure.energy < structure.energyCapacity;
                 }
             });
+            if(targets.length == 0) {
+                targets = [Game.getObjectById('58af4af675cde625e5e03868')];
+            }
             if (targets.length > 0) {
                 var target = creep.pos.findClosestByRange(targets);
 

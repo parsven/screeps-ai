@@ -164,7 +164,7 @@ const roleDefs = {
     },
     SmallHarvester: {
         rolename: 'harvester', factory: module.exports.makeSmallHarvester
-    },
+    }
 
 };
 
@@ -181,10 +181,10 @@ const desiredCreepersE26S63 = {
         ,{role: 'Harvester2', cnt: 0, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
         ,{role: 'HarvesterRemote', cnt: 3, criteria: always }
         ,{role: 'Builder', cnt: 0, criteria: () => constructionSitesE26S63.length > 0 }
-        ,{role: 'Upgrader2', cnt: 3, criteria: always }
-        ,{role: 'Upgrader3', cnt: 3, criteria: () => constructionSitesE26S63.length === 0 }
+        ,{role: 'Upgrader2', cnt: 2, criteria: always }
+        ,{role: 'Upgrader3', cnt: 2, criteria: () => constructionSitesE26S63.length === 0 }
         ,{role: 'Claimer', cnt: 2, criteria: always }
-        ,{role: 'RemoteMineAndBuilder', cnt: 1, criteria: always }
+        ,{role: 'RemoteMineAndBuilder', cnt: 0, criteria: always }
     ],
     fallback: { role: 'SmallHarvester', max:2, always}
 
@@ -237,7 +237,7 @@ const spawnLogic = function(desiredCreepers, spawn) {
 
 module.exports.loop = function () {
 // Garbage collect memory from dead creeps.
-    for(var i in Memory.creeps) {
+    for(let i in Memory.creeps) {
         if(!Game.creeps[i]) {
             delete Memory.creeps[i];
         }

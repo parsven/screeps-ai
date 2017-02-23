@@ -14,12 +14,17 @@ const roleHarvesterRemote = {
 
 
         if (creep.memory.unloading) {
-            const targets = creep.room.find(FIND_STRUCTURES, {
+            let targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_SPAWN) &&
                         structure.energy < structure.energyCapacity;
                 }
             });
+            if( targets.length == 0) {
+                targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => structure.structureType == STRUCTURE_STORAGE
+                });
+            }
             if (targets.length > 0) {
                 const target = creep.pos.findClosestByRange(targets);
 
