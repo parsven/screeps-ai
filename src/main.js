@@ -54,7 +54,7 @@ module.exports.makeHarvester2 = function() {
 };
 
 module.exports.makeHarvesterRemote = function() {
-    build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
+    build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK, CARRY, CARRY, CARRY]);
 };
 
 module.exports.makeUpgrader = function() {
@@ -108,7 +108,7 @@ const towerRepair = function(tower) {
                 filter: (structure) => structure.hits < 300000 && 
                 (structure.structureType === STRUCTURE_WALL || structure.structureType === STRUCTURE_RAMPART)
         });
-        if(damagedWalls.length > 0 && tower.energy > 700) {
+        if(damagedWalls.length > 0 && tower.energy > 820) {
             //var item = damagedWalls[Math.floor(Math.random()*damagedWalls.length)];
             const minHits = Math.min.apply(Math,damagedWalls.map(function(o){return o.hits;}));
             const item = damagedWalls.find(function(o){ return o.hits == minHits; });
@@ -118,27 +118,119 @@ const towerRepair = function(tower) {
 };
 
 
+const tower = Game.getObjectById('58a84e66120c7b1c6451f132');
+const tower2 = Game.getObjectById('58aed3482be237616065a48d');
+const constructionSitesE26S63 = Object.keys(Game.constructionSites).filter((siteKey) => {
+        return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E26S63';
+    });
 
 
 const roleDefs = {
-    Harvester: {rolename: 'harvester', factory: module.exports.makeHarvester}
+    Harvester: {
+        rolename: 'harvester', factory: module.exports.makeHarvester
+    },
+    Upgrader: {
+        rolename: 'upgrader', factory: module.exports.makeUpgrader
+    },
+    Repairer: {
+        rolename: 'repairer', factory: module.exports.makeRepairer
+    },
+    Towercharger: {
+        rolename: 'towercharger', factory: module.exports.makeTowercharger
+    },
+    Towercharger2: {
+        rolename: 'towercharger2', factory: module.exports.makeTowercharger2
+    },
+    Harvester2: {
+        rolename: 'harvester2', factory: module.exports.makeHarvester2
+    },
+    HarvesterRemote: {
+        rolename: 'harvesterRemote', factory: module.exports.makeHarvesterRemote
+    },
+    Builder: {
+        rolename: 'builder', factory: module.exports.makeBuilder
+    },
+    Upgrader2: {
+        rolename: 'upgrader2', factory: module.exports.makeUpgrader2
+    },
+    Upgrader3: {
+        rolename: 'upgrader3', factory: module.exports.makeUpgrader3
+    },
+    Claimer: {
+        rolename: 'claimer', factory: module.exports.makeClaimer
+    },
+    RemoteMineAndBuilder: {
+        rolename: 'remoteMineAndBuilder', factory: module.exports.makeRemoteMineAndBuilder
+    },
+    SmallHarvester: {
+        rolename: 'harvester', factory: module.exports.makeSmallHarvester
+    },
+
 };
 
 
-const desiredCreepers = {
+const always = function() {return true};
+
+const desiredCreepersE26S63 = {
     distribution: [
-        {role: 'Harvester', max: 3, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
-        ,{role: roleHarvester, max: 3, criteria: () => true }
-
-
+         {role: 'Harvester', cnt: 3, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
+        ,{role: 'Upgrader', cnt: 1, criteria: always }
+        ,{role: 'Repairer', cnt: 0, criteria: always }
+        ,{role: 'Towercharger', cnt: 1, criteria: () => tower.energy < 800 }
+        ,{role: 'Towercharger2', cnt: 1, criteria: () => tower2.energy < 800 }
+        ,{role: 'Harvester2', cnt: 0, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
+        ,{role: 'HarvesterRemote', cnt: 3, criteria: always }
+        ,{role: 'Builder', cnt: 0, criteria: () => constructionSitesE26S63.length > 0 }
+        ,{role: 'Upgrader2', cnt: 3, criteria: always }
+        ,{role: 'Upgrader3', cnt: 3, criteria: () => constructionSitesE26S63.length === 0 }
+        ,{role: 'Claimer', cnt: 2, criteria: always }
+        ,{role: 'RemoteMineAndBuilder', cnt: 1, criteria: always }
     ],
-    fallback: { role: 'Miniharvester',
-        max:2,
-        criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 && Game.rooms['E26S63'].c}
+    fallback: { role: 'SmallHarvester', max:2, always}
 
 };
 
 
+const spawnLogic = function(desiredCreepers, spawn) {
+
+    let spawnCandidate;
+
+    let str = "";
+
+    for( let i in desiredCreepers.distribution ) {
+        const r = desiredCreepers.distribution[i];
+        const role = roleDefs[r.role];
+        if(role === undefined) {
+            console.log("role:" + r.role + " is undefined!");
+        }
+        const rolename = role.rolename;
+        const currentCnt = cntCreepsOfType(rolename);
+        const line = "[" + currentCnt + "/" + r.cnt + "] " + r.role;
+        if(r.criteria()) {
+            str = str + "  " + line +"\n";
+            if(!spawnCandidate && currentCnt < r.cnt) {
+                spawnCandidate = r.role;
+            }
+        } else {
+            str = str + "( " + line +" )\n";
+        }
+    }
+
+//    Game.rooms['E26S63'].
+    str = str + "energy in room: ["
+        + spawn.room.energyAvailable + "/"
+        + spawn.room.energyCapacityAvailable + "]\n";
+
+    if(spawnCandidate) {
+        str = str + "Next to spawn is: " + spawnCandidate + "\n";
+        const factory = roleDefs[spawnCandidate].factory;
+        factory();
+    } else {
+        str = str + "Nothing new to spawn!\n"
+    }
+
+    return str;
+};
 
 
 
@@ -151,8 +243,6 @@ module.exports.loop = function () {
         }
     }
 
-    const tower = Game.getObjectById('58a84e66120c7b1c6451f132');
-    const tower2 = Game.getObjectById('58aed3482be237616065a48d');
 
     if(tower) {
         if(!towerAttack(tower) && Game.time % 2 == 0) {
@@ -162,67 +252,24 @@ module.exports.loop = function () {
         console.log('No tower1 found!');
     }
     if(tower2) {
-        if(!towerAttack(tower) && Game.time % 2 == 1) {
-            towerRepair(tower);
+        if(!towerAttack(tower2) && Game.time % 2 == 1) {
+            towerRepair(tower2);
         }
     } else {
         console.log('No tower2 found!');
     }
 
-    if(Game.time % 10 ===0 && Game.spawns['Spawn1'].spawning === null)
+    if(Game.time % 5 ===0 && Game.spawns['Spawn1'].spawning === null)
     {
-        const repairers = cntCreepsOfType('repairer');
-        const harvesters = cntCreepsOfType('harvester');
-        const upgraders = cntCreepsOfType('upgrader');
-        const towerchargers = cntCreepsOfType('towercharger');
-        const towerchargers2 = cntCreepsOfType('towercharger2');
-        const builders = cntCreepsOfType('builder');
-        const upgraders2 = cntCreepsOfType('upgrader2');
-        const upgraders3 = cntCreepsOfType('upgrader3');
-        const harvesters2 = cntCreepsOfType('harvester2');
-        const harvestersRemote = cntCreepsOfType('harvesterRemote');
-        const remoteMineAndBuilders = cntCreepsOfType('remoteMineAndBuilder');
-        const claimers = cntCreepsOfType('claimer');
 
-        const constructionSitesE26S63 = Object.keys(Game.constructionSites).filter((siteKey) => {
-            return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E26S63';
-        });
+        let logStr = "=========================\n"
+            + spawnLogic(desiredCreepersE26S63, Game.spawns['Spawn1']);
 
-        console.log('energy:' + Game.rooms['E26S63'].energyAvailable + 'repairers:' + repairers + ' harvesters:' + harvesters + ' upgraders:' + upgraders + ' builders:' + builders + ' towerchargers:'+ towerchargers+ 'upgraders2:' + upgraders2 + ' harvesters2:' + harvesters2);
+        console.log(logStr);
 
-        if(harvesters < 2 &&  Game.rooms['E26S63'].energyAvailable < 1300) {
-            module.exports.makeHarvester();
-        } else if(upgraders < 1) {
-            module.exports.makeUpgrader();
-        } else if(repairers < 0) {
-            module.exports.makeRepairer();
-        } else if(towerchargers < 2 && tower.energy < 800) {
-            module.exports.makeTowercharger();
-        } else if(towerchargers2 < 1 && tower2.energy < 800) {
-            module.exports.makeTowercharger2();
-        } else if(harvesters2 < 0) {
-            module.exports.makeHarvester2();
-        } else if(harvestersRemote < 3) {
-            module.exports.makeHarvesterRemote();
-        } else if(constructionSitesE26S63.length > 0 && builders < 3) {
-            module.exports.makeBuilder();
-        } else if(upgraders2 < 2) {
-            module.exports.makeUpgrader2();
-        } else if(/*constructionSitesE26S63.length == 0*/ upgraders3 < 1) {
-            module.exports.makeUpgrader3();
-        } else if(claimers < 3) {
-            module.exports.makeClaimer();
-        } else if(remoteMineAndBuilders < 1) {
-            module.exports.makeRemoteMineAndBuilder();
-        }
-        
-        if(harvesters == 0) {
+        if(cntCreepsOfType('harvester') == 0) {
             module.exports.makeSmallHarvester();    
         }
-
-        
-    } else {
-//        console.log('Currently spawning..');
     }
 
 

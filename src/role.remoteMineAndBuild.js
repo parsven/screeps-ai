@@ -15,7 +15,7 @@ const roleBuilder = {
         if (creep.memory.building) {
 
             let structs = creep.room.find(FIND_STRUCTURES, {
-                filter: object => object.hits * 1.0 / object.hitsMax < 0.8
+                filter: object => object.hits * 1.0 / object.hitsMax < 0.8 && object.room.name === 'E25S63'
             });
 
             structs.sort((a, b) => a.hits - b.hits);
