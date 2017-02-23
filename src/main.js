@@ -183,11 +183,11 @@ module.exports.loop = function () {
             module.exports.makeRepairer();
         } else if(towerchargers < 1 && tower.energy < 900) {
             module.exports.makeTowercharger();
-        } else if(harvesters2 < 2) {
+        } else if(harvesters2 < 0) {
             module.exports.makeHarvester2();
         } else if(harvestersRemote < 2) {
             module.exports.makeHarvesterRemote();
-        } else if(constructionSitesE26S63.length > 0 && builders < 2) {
+        } else if(constructionSitesE26S63.length > 0 && builders < 3) {
             module.exports.makeBuilder();
         } else if(upgraders2 < 2) {
             module.exports.makeUpgrader2();
