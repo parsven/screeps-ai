@@ -7,6 +7,7 @@ const roleUpgrader3 = require('role.upgrader3');
 const roleBuilder = require('role.builder');
 const roleRepairer = require('role.repairer');
 const roleTowercharger = require('role.towercharger');
+const roleTowercharger2 = require('role.towercharger2');
 const roleRemoteMineAndBuilder = require('role.remoteMineAndBuild');
 const roleClaimer = require('role.claimer');
 
@@ -75,6 +76,10 @@ module.exports.makeRepairer = function() {
 
 module.exports.makeTowercharger = function() {
     build('towercharger', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+};
+
+module.exports.makeTowercharger2 = function() {
+    build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
 };
 
 module.exports.makeClaimer = function() {
@@ -147,12 +152,21 @@ module.exports.loop = function () {
     }
 
     const tower = Game.getObjectById('58a84e66120c7b1c6451f132');
+    const tower2 = Game.getObjectById('58aed3482be237616065a48d');
+
     if(tower) {
         if(!towerAttack(tower) && Game.time % 2 == 0) {
             towerRepair(tower);
         }
     } else {
-        console.log('No tower found!');
+        console.log('No tower1 found!');
+    }
+    if(tower2) {
+        if(!towerAttack(tower) && Game.time % 2 == 1) {
+            towerRepair(tower);
+        }
+    } else {
+        console.log('No tower2 found!');
     }
 
     if(Game.time % 10 ===0 && Game.spawns['Spawn1'].spawning === null)
@@ -161,6 +175,7 @@ module.exports.loop = function () {
         const harvesters = cntCreepsOfType('harvester');
         const upgraders = cntCreepsOfType('upgrader');
         const towerchargers = cntCreepsOfType('towercharger');
+        const towerchargers2 = cntCreepsOfType('towercharger2');
         const builders = cntCreepsOfType('builder');
         const upgraders2 = cntCreepsOfType('upgrader2');
         const upgraders3 = cntCreepsOfType('upgrader3');
@@ -181,11 +196,13 @@ module.exports.loop = function () {
             module.exports.makeUpgrader();
         } else if(repairers < 0) {
             module.exports.makeRepairer();
-        } else if(towerchargers < 1 && tower.energy < 900) {
+        } else if(towerchargers < 2 && tower.energy < 800) {
             module.exports.makeTowercharger();
+        } else if(towerchargers2 < 1 && tower2.energy < 800) {
+            module.exports.makeTowercharger2();
         } else if(harvesters2 < 0) {
             module.exports.makeHarvester2();
-        } else if(harvestersRemote < 2) {
+        } else if(harvestersRemote < 3) {
             module.exports.makeHarvesterRemote();
         } else if(constructionSitesE26S63.length > 0 && builders < 3) {
             module.exports.makeBuilder();
@@ -242,6 +259,9 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == 'towercharger') {
             roleTowercharger.run(creep);
+        }
+        if (creep.memory.role == 'towercharger2') {
+            roleTowercharger2.run(creep);
         }
         if (creep.memory.role == 'remoteMineAndBuilder') {
             roleRemoteMineAndBuilder.run(creep);
