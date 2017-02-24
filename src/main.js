@@ -8,8 +8,9 @@ const roleBuilder = require('role.builder');
 const roleRepairer = require('role.repairer');
 const roleTowercharger = require('role.towercharger');
 const roleTowercharger2 = require('role.towercharger2');
-const roleRemoteMineAndBuilder = require('role.remoteMineAndBuild');
+const roleRemoteRepairAndBuilder = require('role.remoteRepairAndBuild');
 const roleClaimer = require('role.claimer');
+const roleMiner = require('role.miner');
 
 const _ = require('lodash');
 
@@ -33,8 +34,8 @@ const build = function(typ, body) {
     }
 };
 
-module.exports.makeRemoteMineAndBuilder = function() {
-    build('remoteMineAndBuilder', [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE]);
+module.exports.makeRemoteRepairAndBuilder = function() {
+    build('remoteMineAndBuilder', [WORK, CARRY, CARRY, MOVE, MOVE]);
 };
 
 module.exports.makeSmallHarvester = function() {
@@ -54,7 +55,7 @@ module.exports.makeHarvester2 = function() {
 };
 
 module.exports.makeHarvesterRemote = function() {
-    build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK, CARRY, CARRY, CARRY]);
+    build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]);
 };
 
 module.exports.makeUpgrader = function() {
@@ -98,21 +99,31 @@ const towerAttack = function(t) {
 
 const towerRepair = function(t) {
     const closestDamagedStructure = t.pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL && structure.structureType !== STRUCTURE_RAMPART
+        filter: function(structure) {
+            return structure.hits < structure.hitsMax &&
+                structure.structureType !== STRUCTURE_WALL &&
+                structure.structureType !== STRUCTURE_RAMPART;
+        }
     });
 
     if(closestDamagedStructure) {
+        //console.log("Repairing damaged strcure of type:" + closestDamagedStructure.structureType);
         t.repair(closestDamagedStructure);
-    } else {
+    } else if(t.energy > 820) {
         const damagedWalls = t.room.find(FIND_STRUCTURES, {
-                filter: (structure) => structure.hits < 300000 && 
-                (structure.structureType === STRUCTURE_WALL || structure.structureType === STRUCTURE_RAMPART)
+            filter: function (structure) {
+                return structure.hits < 300000 &&
+                    (structure.structureType === STRUCTURE_WALL || structure.structureType === STRUCTURE_RAMPART)
+            }
         });
-        if(damagedWalls.length > 0 && t.energy > 820) {
+        if(damagedWalls.length > 0) {
             //var item = damagedWalls[Math.floor(Math.random()*damagedWalls.length)];
             const minHits = Math.min.apply(Math,damagedWalls.map(function(o){return o.hits;}));
             const item = damagedWalls.find(function(o){ return o.hits == minHits; });
+            //          console.log("My energy is:" + t.energy + " reinforcing:" + item.structureType);
             t.repair(item);
+        } else {
+            //          console.log("My energy is:" + t.energy + " no action taken!");
         }
     }
 };
@@ -124,6 +135,8 @@ const constructionSitesE26S63 = Object.keys(Game.constructionSites).filter((site
         return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E26S63';
     });
 
+
+const energySourceE25S63id = '57ef9df386f108ae6e60e8d7';
 
 const roleDefs = {
     Harvester: {
@@ -160,7 +173,19 @@ const roleDefs = {
         rolename: 'claimer', factory: module.exports.makeClaimer
     },
     RemoteMineAndBuilder: {
-        rolename: 'remoteMineAndBuilder', factory: module.exports.makeRemoteMineAndBuilder
+        rolename: 'remoteMineAndBuilder', factory: module.exports.makeRemoteRepairAndBuilder
+    },
+    RemoteMine: {
+        rolename: roleMiner.role,
+        factory: () => roleMiner.maxFactory(
+            Game.spawns['Spawn1'],
+            energySourceE25S63id,
+            [   new RoomPosition(14,19, 'E26S63'),
+                new RoomPosition(7,34, 'E26S63'),
+                new RoomPosition(1,41, 'E26S63'),
+                new RoomPosition(30,46, 'E25S63'),
+                new RoomPosition(20,41, 'E25S63')],
+            'RemoteMineE25S63')
     },
     SmallHarvester: {
         rolename: 'harvester', factory: module.exports.makeSmallHarvester
@@ -173,16 +198,17 @@ const always = function() {return true};
 
 const desiredCreepersE26S63 = {
     distribution: [
-         {role: 'Harvester', cnt: 3, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
+         {role: 'Harvester', cnt: 1, criteria: () => Game.rooms['E26S63'].energyAvailable < 500 }
         ,{role: 'Upgrader', cnt: 1, criteria: always }
         ,{role: 'Repairer', cnt: 0, criteria: always }
-        ,{role: 'Towercharger', cnt: 1, criteria: () => tower.energy < 800 }
+        ,{role: 'Towercharger', cnt: 2, criteria: () => tower.energy < 800 }
         ,{role: 'Towercharger2', cnt: 1, criteria: () => tower2.energy < 800 }
         ,{role: 'Harvester2', cnt: 0, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
-        ,{role: 'HarvesterRemote', cnt: 4, criteria: always }
+        ,{role: 'RemoteMine', cnt: 1, criteria: always }
+        ,{role: 'HarvesterRemote', cnt: 5, criteria: always }
         ,{role: 'Claimer', cnt: 2, criteria: always }
         ,{role: 'Builder', cnt: 0, criteria: () => constructionSitesE26S63.length > 0 }
-        ,{role: 'Upgrader2', cnt: 2, criteria: always }
+        ,{role: 'Upgrader2', cnt: 3, criteria: always }
         ,{role: 'Upgrader3', cnt: 3, criteria: () => constructionSitesE26S63.length === 0 }
         ,{role: 'RemoteMineAndBuilder', cnt: 1, criteria: always }
     ],
@@ -216,7 +242,6 @@ const spawnLogic = function(desiredCreepers, spawn) {
         }
     }
 
-//    Game.rooms['E26S63'].
     str = str + "energy in room: ["
         + spawn.room.energyAvailable + "/"
         + spawn.room.energyCapacityAvailable + "]\n";
@@ -311,10 +336,13 @@ module.exports.loop = function () {
             roleTowercharger2.run(creep);
         }
         if (creep.memory.role == 'remoteMineAndBuilder') {
-            roleRemoteMineAndBuilder.run(creep);
+            roleRemoteRepairAndBuilder.run(creep);
         }
         if (creep.memory.role == 'claimer') {
             roleClaimer.run(creep);
+        }
+        if (creep.memory.role == roleMiner.role) {
+            roleMiner.run(creep);
         }
     }
 };

@@ -16,7 +16,7 @@ const roleHarvesterRemote = {
         if (creep.memory.unloading) {
             let targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+                    return (structure.structureType == STRUCTURE_EXTENSION ) &&
                         structure.energy < structure.energyCapacity;
                 }
             });
@@ -40,10 +40,11 @@ const roleHarvesterRemote = {
         } else {
             const room = Game.rooms['E25S63'];
             if (room) {
-                const sources = room.find(FIND_SOURCES);
-                source = sources[0];
-                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+               // const sources = room.find(FIND_SOURCES);
+               // source = sources[0];
+                source = Game.getObjectById('58af8d5fdb3b7b23072eed6f');
+                if (creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             } else {
                 const dest = new RoomPosition(47, 44, 'E25S63');
