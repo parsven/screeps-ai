@@ -18,10 +18,11 @@ const roleBuilder = {
                 filter: object => object.hits * 1.0 / object.hitsMax < 0.85 && object.room.name === 'E25S63'
             });
 
+            _.shuffle(structs);
             structs.sort((a, b) => a.hits/a.hitsMax - b.hits/b.hitsMax);
 
             if (structs.length > 0) {
-                console.log("Repairing struct w hits=" + structs[0].hits);
+       //         console.log("Repairing struct w hits=" + structs[0].hits);
                 if (creep.repair(structs[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(structs[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
@@ -32,7 +33,7 @@ const roleBuilder = {
                         creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 } else {
-                    const dest = Game.flags['Fallback'];
+                    const dest = Game.flags['Fallback2'];
                     creep.moveTo(dest);
                 }
             }

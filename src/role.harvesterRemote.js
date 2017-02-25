@@ -1,5 +1,6 @@
-const roleHarvesterRemote = {
+const _ = require('lodash');
 
+const roleHarvesterRemote = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
@@ -43,8 +44,21 @@ const roleHarvesterRemote = {
                // const sources = room.find(FIND_SOURCES);
                // source = sources[0];
                 source = Game.getObjectById('58af8d5fdb3b7b23072eed6f');
-                if (creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+                const withdrawRes = creep.withdraw(source, RESOURCE_ENERGY);
+                if(withdrawRes !== OK) {
+                    const emptyContainer = source.store[RESOURCE_ENERGY] === 0;
+                    const creepsAt = _.find(room.lookAt(source), {type: 'creep'});
+                    const minerFound =  creepsAt && Memory.creeps[creepsAt.creep.name].role === 'miner';
+                    const resourceAvailabe = (!emptyContainer || minerFound);
+//                    console.log("resourceAvailabe:" + resourceAvailabe);
+//                    console.log("empty:" + emptyContainer);
+//                    console.log("creepsAt:" + JSON.stringify(creepsAt, null, 2));
+//                    console.log("minerFound:" + minerFound);
+                    if (withdrawRes == ERR_NOT_IN_RANGE && resourceAvailabe) {
+                            creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+                    } else if (!resourceAvailabe){
+                        creep.moveTo(Game.flags['Fallback2']); //Todo: No hardcoded value!!!
+                    }
                 }
             } else {
                 const dest = new RoomPosition(47, 44, 'E25S63');

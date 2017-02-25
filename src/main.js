@@ -42,10 +42,6 @@ module.exports.makeSmallHarvester = function() {
     build('harvester', [WORK, CARRY, MOVE]);
 };
 
-module.exports.makeBuilder = function() {
-    build('builder', [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE]);
-};
-
 module.exports.makeHarvester = function() {
     build('harvester', [MOVE,WORK,WORK,WORK,CARRY]);
 };
@@ -129,9 +125,9 @@ const towerRepair = function(t) {
 };
 
 
-const tower = Game.getObjectById('58a84e66120c7b1c6451f132');
-const tower2 = Game.getObjectById('58aed3482be237616065a48d');
-const constructionSitesE26S63 = Object.keys(Game.constructionSites).filter((siteKey) => {
+const getTower = () => Game.getObjectById('58a84e66120c7b1c6451f132');
+const getTower2 = () => Game.getObjectById('58aed3482be237616065a48d');
+const constructionSitesE26S63 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
         return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E26S63';
     });
 
@@ -161,7 +157,13 @@ const roleDefs = {
         rolename: 'harvesterRemote', factory: module.exports.makeHarvesterRemote
     },
     Builder: {
-        rolename: 'builder', factory: module.exports.makeBuilder
+        rolename: roleBuilder.role,
+        factory: () => roleBuilder.factory(
+            Game.spawns['Spawn1'],
+            [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE],
+            '57ef9df686f108ae6e60e933',
+            'BuildSource',
+            'Builder')
     },
     Upgrader2: {
         rolename: 'upgrader2', factory: module.exports.makeUpgrader2
@@ -185,7 +187,8 @@ const roleDefs = {
                 new RoomPosition(1,41, 'E26S63'),
                 new RoomPosition(30,46, 'E25S63'),
                 new RoomPosition(20,41, 'E25S63')],
-            'RemoteMineE25S63')
+            'RemoteMineE25S63',
+            13)
     },
     SmallHarvester: {
         rolename: 'harvester', factory: module.exports.makeSmallHarvester
@@ -198,19 +201,19 @@ const always = function() {return true};
 
 const desiredCreepersE26S63 = {
     distribution: [
-         {role: 'Harvester', cnt: 1, criteria: () => Game.rooms['E26S63'].energyAvailable < 500 }
+         {role: 'Harvester', cnt: 3, criteria: () => Game.rooms['E26S63'].energyAvailable < 400 }
         ,{role: 'Upgrader', cnt: 1, criteria: always }
         ,{role: 'Repairer', cnt: 0, criteria: always }
-        ,{role: 'Towercharger', cnt: 2, criteria: () => tower.energy < 800 }
-        ,{role: 'Towercharger2', cnt: 1, criteria: () => tower2.energy < 800 }
-        ,{role: 'Harvester2', cnt: 0, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
         ,{role: 'RemoteMine', cnt: 1, criteria: always }
         ,{role: 'HarvesterRemote', cnt: 5, criteria: always }
+        ,{role: 'RemoteMineAndBuilder', cnt: 2, criteria: always }
         ,{role: 'Claimer', cnt: 2, criteria: always }
-        ,{role: 'Builder', cnt: 0, criteria: () => constructionSitesE26S63.length > 0 }
+        ,{role: 'Towercharger', cnt: 2, criteria: () => getTower().energy < 830 }
+        ,{role: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830 }
+    //    ,{role: 'Harvester2', cnt: 3, criteria: () => Game.rooms['E26S63'].energyAvailable < 1000 }
+        ,{role: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0 }
         ,{role: 'Upgrader2', cnt: 3, criteria: always }
-        ,{role: 'Upgrader3', cnt: 3, criteria: () => constructionSitesE26S63.length === 0 }
-        ,{role: 'RemoteMineAndBuilder', cnt: 1, criteria: always }
+        ,{role: 'Upgrader3', cnt: 3, criteria: () => constructionSitesE26S63().length === 0 }
     ],
     fallback: { role: 'SmallHarvester', max:2, always}
 
@@ -268,6 +271,8 @@ module.exports.loop = function () {
         }
     }
 
+    const tower = getTower();
+    const tower2 = getTower2();
 
     if(tower) {
         if(!towerAttack(tower) && Game.time % 2 == 0) {
@@ -284,7 +289,7 @@ module.exports.loop = function () {
         console.log('No tower2 found!');
     }
 
-    if(Game.time % 5 ===0 && Game.spawns['Spawn1'].spawning === null)
+    if(Game.time % 10 === 0 && Game.spawns['Spawn1'].spawning === null)
     {
 
         let logStr = "=========================\n"

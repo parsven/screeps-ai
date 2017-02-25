@@ -5,15 +5,15 @@ module.exports = {
         return this.energyCost(6,3)
     },
 
-    maxFactory: function(spawn, sourceId, path, roleName) {
-        return this.factory(spawn, 6, 3, sourceId, path, roleName)
+    maxFactory: function(spawn, sourceId, path, roleName, repairInteval) {
+        return this.factory(spawn, 6, 3, sourceId, path, roleName, repairInteval)
     },
 
     energyCost: function (workUnits, moveUnits) {
         return 100 * workUnits + 50 * moveUnits
     },
 
-    factory: function (spawn, workUnits, moveUnits, sourceId, path, roleName) {
+    factory: function (spawn, workUnits, moveUnits, sourceId, path, roleName, repairInterval) {
         const _ = require('lodash');
         const name = roleName + '-' + Game.time;
         let body = [];
@@ -25,7 +25,8 @@ module.exports = {
                 path: path,
                 pathIndex: 0,
                 sourceId: sourceId,
-                mining: false
+                mining: false,
+                repairInterval: repairInterval
             })
         } else {
             return undefined
@@ -40,20 +41,31 @@ module.exports = {
      * @param {Creep} creep
      */
     run: function (creep) {
+        if(creep.spawning) {
+            return;
+        }
         const m = creep.memory;
         if(m.mining) {
-            creep.say("M");
-            creep.harvest(Game.getObjectById(m.sourceId));
+            if(m.repairInterval && Game.time % m.repairInterval === 0) {
+       //         const containersAt = _.find(room.lookAt(creep), {type: 'container'});
+
+         //       console.log(JSON.stringify(containersAt, null, 0));
+
+                creep.say("R");
+
+            } else {
+                creep.say("M");
+                creep.harvest(Game.getObjectById(m.sourceId));
+            }
         } else {
             let targetPos = m.path[m.pathIndex];
             let dest = new RoomPosition(targetPos.x, targetPos.y, targetPos.roomName);
             if(m.pathIndex + 1 == m.path.length) {
-                console.log("2");
                 //At the last target in the path, we need to stand right on it.
                 if(creep.pos.isEqualTo(dest)) {
                     creep.memory.mining = true;
                     creep.memory.path = undefined;
-                    return run(creep)
+                    return this.run(creep)
                 }
             } else {
                 // At all earlier way points its enough to be near them.

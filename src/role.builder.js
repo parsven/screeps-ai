@@ -1,6 +1,23 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
-var roleBuilder = {
+
+const roleBuilder = {
+
+    role: 'builder',
+
+    factory: function (spawn, body, sourceId, harvestFlagName, roleName) {
+        const name = roleName + '-' + Game.time;
+        if( OK == spawn.canCreateCreep(body, name)) {
+            return spawn.createCreep(body, name, {
+                role: this.role,
+                sourceId: sourceId,
+                harvestFlagName: harvestFlagName,
+            })
+        } else {
+            return undefined
+        }
+    },
+
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -15,7 +32,7 @@ var roleBuilder = {
         }
 
         if(creep.memory.building) {
-            var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+            let targets = creep.room.find(FIND_CONSTRUCTION_SITES);
             if(targets.length) {
                 targets = _.sortBy(targets, ['structureType']);
                 if(creep.build(targets[targets.length -1]) == ERR_NOT_IN_RANGE) {
@@ -26,10 +43,10 @@ var roleBuilder = {
                 creep.moveTo(dest);
             }        
         } else {
-            var sources = creep.room.find(FIND_SOURCES);
-            source = sources[1];
+            source = Game.getObjectById(creep.memory.sourceId);
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.flags['BuildSource'], {visualizePathStyle: {stroke: '#ffaa00'}});
+                const flag = Game.flags[creep.memory.harvestFlagName];
+                res = creep.moveTo(flag, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }
