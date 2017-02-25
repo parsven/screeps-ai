@@ -54,10 +54,6 @@ module.exports.makeHarvesterRemote = function() {
     build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]);
 };
 
-module.exports.makeUpgrader = function() {
-//    build('upgrader', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
-    build('upgrader', [MOVE,WORK,CARRY]);
-};
 
 module.exports.makeUpgrader2 = function() {
     build('upgrader2', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
@@ -139,7 +135,13 @@ const roleDefs = {
         rolename: 'harvester', factory: module.exports.makeHarvester
     },
     Upgrader: {
-        rolename: 'upgrader', factory: module.exports.makeUpgrader
+        rolename: roleUpgrader.role,
+        factory: () => roleUpgrader.factory(
+            Game.spawns['Spawn1'],
+            [MOVE,WORK,CARRY],
+            '57ef9df686f108ae6e60e932',
+            'Upgrader'
+        )
     },
     Repairer: {
         rolename: 'repairer', factory: module.exports.makeRepairer

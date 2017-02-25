@@ -1,4 +1,20 @@
-var roleUpgrader = {
+const roleUpgrader = {
+
+    role: 'upgrader',
+
+    factory: function (spawn, body, sourceId, roleName, harvestPos) {
+        const name = roleName + '-' + Game.time;
+        if( OK == spawn.canCreateCreep(body, name)) {
+            return spawn.createCreep(body, name, {
+                role: this.role,
+                sourceId: sourceId,
+                harvestPos: harvestPos,
+            })
+        } else {
+            return undefined
+        }
+    },
+
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -18,9 +34,24 @@ var roleUpgrader = {
             }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            const source = Game.getObjectById(creep.memory.sourceId);
+            let res;
+            if (source.resourceType) {
+                res = creep.withdraw(source, RESOURCE_ENERGY);
+            } else {
+                res = creep.harvest(source);
+            }
+            if (res != OK) {
+                if (res == ERR_NOT_IN_RANGE) {
+                    let pos;
+                    if(creep.memory.harvestPos) {
+                        const harvestPos = creep.memory.harvestPos;
+                        pos = new RoomPosition(harvestPos.x, harvestPos.y, harvestPos.roomName);
+                    } else {
+                        pos = source;
+                    }
+                    creep.moveTo(pos, {visualizePathStyle: {stroke: '#ffaa00'}});
+                }
             }
         }
     }
