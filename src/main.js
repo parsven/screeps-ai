@@ -188,7 +188,7 @@ const roleDefs = {
                 new RoomPosition(30,46, 'E25S63'),
                 new RoomPosition(20,41, 'E25S63')],
             'RemoteMineE25S63',
-            13)
+            4)
     },
     SmallHarvester: {
         rolename: 'harvester', factory: module.exports.makeSmallHarvester
@@ -201,11 +201,11 @@ const always = function() {return true};
 
 const desiredCreepersE26S63 = {
     distribution: [
-         {role: 'Harvester', cnt: 3, criteria: () => Game.rooms['E26S63'].energyAvailable < 400 }
+         {role: 'Harvester', cnt: 1, criteria: () => Game.rooms['E26S63'].energyAvailable < 400 }
         ,{role: 'Upgrader', cnt: 1, criteria: always }
         ,{role: 'Repairer', cnt: 0, criteria: always }
         ,{role: 'RemoteMine', cnt: 1, criteria: always }
-        ,{role: 'HarvesterRemote', cnt: 5, criteria: always }
+        ,{role: 'HarvesterRemote', cnt: 4, criteria: always }
         ,{role: 'RemoteMineAndBuilder', cnt: 2, criteria: always }
         ,{role: 'Claimer', cnt: 2, criteria: always }
         ,{role: 'Towercharger', cnt: 2, criteria: () => getTower().energy < 830 }

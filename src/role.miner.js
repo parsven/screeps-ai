@@ -10,7 +10,7 @@ module.exports = {
     },
 
     energyCost: function (workUnits, moveUnits) {
-        return 100 * workUnits + 50 * moveUnits
+        return 100 * workUnits + 50 * moveUnits + 50;
     },
 
     factory: function (spawn, workUnits, moveUnits, sourceId, path, roleName, repairInterval) {
@@ -19,6 +19,9 @@ module.exports = {
         let body = [];
         _.times(workUnits, ()=> body.push(WORK));
         _.times(moveUnits, ()=> body.push(MOVE));
+        if(repairInterval) {
+            body.push(CARRY);
+        }
         if( OK == spawn.canCreateCreep(body, name)) {
             return spawn.createCreep(body, name, {
                 role: this.role,
@@ -47,12 +50,11 @@ module.exports = {
         const m = creep.memory;
         if(m.mining) {
             if(m.repairInterval && Game.time % m.repairInterval === 0) {
-       //         const containersAt = _.find(room.lookAt(creep), {type: 'container'});
-
-         //       console.log(JSON.stringify(containersAt, null, 0));
-
-                creep.say("R");
-
+                const container = _.find(creep.room.lookAt(creep),
+                        (i) => i.type === 'structure'
+                                && i.structure.structureType === 'container');
+                creep.repair(container);
+                creep.say("Repairing!");
             } else {
                 creep.say("M");
                 creep.harvest(Game.getObjectById(m.sourceId));
