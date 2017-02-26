@@ -4,7 +4,7 @@ var roleBuilder = {
     run: function(creep) {
         const roomController = Game.getObjectById('57ef9df386f108ae6e60e8d6');
         if (roomController) {
-            if (creep.reserveController(roomController) == ERR_NOT_IN_RANGE) {
+            if (creep.claimController(roomController) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(roomController, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         } else {

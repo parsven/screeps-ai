@@ -26,10 +26,13 @@ const roleHarvesterRemote = {
                     filter: (structure) => structure.structureType == STRUCTURE_STORAGE
                 });
             }
+
+            targets = [Game.getObjectById('57ef9df386f108ae6e60e8d6')];
+
             if (targets.length > 0) {
                 const target = creep.pos.findClosestByRange(targets);
 
-                if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
 
                     const reuserFactor = Math.floor(Math.random() * (5 - 4 + 1)) + 4;
                     creep.moveTo(target, {reusePath: reuserFactor, visualizePathStyle: {stroke: '#ffffff'}});
@@ -41,6 +44,15 @@ const roleHarvesterRemote = {
         } else {
             const room = Game.rooms['E25S63'];
             if (room) {
+                const target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+                if(target) {
+                    const r = creep.pickup(target);
+                    if(r == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target);
+                    }
+                    return;
+                }
+
                // const sources = room.find(FIND_SOURCES);
                // source = sources[0];
                 source = Game.getObjectById('58af8d5fdb3b7b23072eed6f');

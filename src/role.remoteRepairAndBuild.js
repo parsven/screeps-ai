@@ -18,9 +18,9 @@ const roleBuilder = {
                 filter: object => object.hits * 1.0 / object.hitsMax < 0.85 && object.room.name === 'E25S63'
             });
 
-            _.shuffle(structs);
-            structs.sort((a, b) => a.hits/a.hitsMax - b.hits/b.hitsMax);
-
+         //   _.shuffle(structs);
+         //   structs.sort((a, b) => a.hits/a.hitsMax - b.hits/b.hitsMax);
+structs =[];
             if (structs.length > 0) {
        //         console.log("Repairing struct w hits=" + structs[0].hits);
                 if (creep.repair(structs[0]) == ERR_NOT_IN_RANGE) {
