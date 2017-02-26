@@ -66,7 +66,7 @@ module.exports = {
                 //At the last target in the path, we need to stand right on it.
                 if(creep.pos.isEqualTo(dest)) {
                     creep.memory.mining = true;
-                    creep.memory.path = undefined;
+     //               creep.memory.path = undefined;
                     return this.run(creep)
                 }
             } else {

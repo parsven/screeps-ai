@@ -13,6 +13,7 @@ const roleClaimer = require('role.claimer');
 const roleMiner = require('role.miner');
 
 const roomE26S63 = require('room.E26S63');
+const util = require('util');
 
 const _ = require('lodash');
 
@@ -23,16 +24,14 @@ const cntCreepsOfType = function (t) {
 };
 
 
-
-
-
-
+const makeSmallHarvester = function() {
+    util.build('harvester', [WORK, CARRY, MOVE]);
+};
 
 
 const spawnLogic = function(spawnRoom, spawn) {
 
     let spawnCandidate;
-
     let str = "";
 
     for( let i in spawnRoom.desiredCreepers.distribution ) {
@@ -71,7 +70,6 @@ const spawnLogic = function(spawnRoom, spawn) {
 
 
 
-
 module.exports.loop = function () {
 // Garbage collect memory from dead creeps.
     for(let i in Memory.creeps) {
@@ -82,17 +80,15 @@ module.exports.loop = function () {
 
     if(Game.time % 10 === 0 && Game.spawns['Spawn1'].spawning === null)
     {
-
         let logStr = "=========================\n"
             + spawnLogic(roomE26S63, Game.spawns['Spawn1']);
-
         console.log(logStr);
-
         if(cntCreepsOfType('harvester') == 0) {
-            module.exports.makeSmallHarvester();    
+            makeSmallHarvester();
         }
     }
 
+    roomE26S63.towerRun();
 
     for(let name in Game.creeps) {
         const creep = Game.creeps[name];

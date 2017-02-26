@@ -1,5 +1,4 @@
 
-//const main = require('main');
 const roleBuilder = require('role.builder');
 const roleMiner = require('role.miner');
 
@@ -17,66 +16,52 @@ const roleRemoteRepairAndBuilder = require('role.remoteRepairAndBuild');
 const roleClaimer = require('role.claimer');
 
 
+const util = require('util');
 
-
-
-const build = function(typ, body) {
-    const name = typ + '-' + Game.time;
-    const spawn = Game.spawns['Spawn1'];
-    const memory = {
-        role: typ
-    };
-    if( OK == spawn.canCreateCreep(body, name)) {
-        const result = spawn.createCreep( body, name, memory );
-        console.log('making ' + typ + ' res=' + result);
-    } else {
-        //  console.log('fail' + body + name);
-    }
-};
 
 const makeRemoteRepairAndBuilder = function() {
-    build('remoteMineAndBuilder', [WORK, CARRY, CARRY, MOVE, MOVE]);
+    util.build('remoteMineAndBuilder', [WORK, CARRY, CARRY, MOVE, MOVE]);
 };
 
 const makeSmallHarvester = function() {
-    build('harvester', [WORK, CARRY, MOVE]);
+    util.build('harvester', [WORK, CARRY, MOVE]);
 };
 
 const makeHarvester = function() {
-    build('harvester', [MOVE,WORK,WORK,WORK,CARRY]);
+    util.build('harvester', [MOVE,WORK,WORK,WORK,CARRY]);
 };
 
 const makeHarvester2 = function() {
-    build('harvester2', [MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
+    util.build('harvester2', [MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
 };
 
 const makeHarvesterRemote = function() {
-    build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,WORK, WORK, WORK]);
+    util.build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,WORK, WORK, WORK]);
 };
 
 
 const makeUpgrader2 = function() {
-    build('upgrader2', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    util.build('upgrader2', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
 };
 
 const makeUpgrader3 = function() {
-    build('upgrader3', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    util.build('upgrader3', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
 };
 
 const makeRepairer = function() {
-    build('repairer', [WORK, CARRY, MOVE, MOVE]);
+    util.build('repairer', [WORK, CARRY, MOVE, MOVE]);
 };
 
 const makeTowercharger = function() {
-    build('towercharger', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    util.build('towercharger', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
 };
 
 const makeTowercharger2 = function() {
-    build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    util.build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
 };
 
 const makeClaimer = function() {
-    build('claimer', [MOVE,MOVE,CLAIM]);
+    util.build('claimer', [MOVE,MOVE,CLAIM]);
 };
 
 
@@ -198,12 +183,12 @@ module.exports = {
             , {role: 'Harvester2', cnt: 3, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
             , {role: 'Towercharger', cnt: 1, criteria: () => getTower().energy < 830}
             , {role: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
-            , {role: 'Upgrader2', cnt: 3, criteria: always}
             , {role: 'RemoteMine', cnt: 1, criteria: always}
             , {role: 'HarvesterRemote', cnt: 4, criteria: always}
             , {role: 'RemoteMineAndBuilder', cnt: 2, criteria: always}
             //    ,{role: 'Claimer', cnt: 2, criteria: always }
             , {role: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
+            , {role: 'Upgrader2', cnt: 3, criteria: always}
             , {role: 'Upgrader3', cnt: 2, criteria: () => constructionSitesE26S63().length === 0}
         ],
         fallback: {role: 'SmallHarvester', max: 2, always}
