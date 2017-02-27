@@ -10,10 +10,12 @@ const roleUpgrader = require('role.upgrader');
 const roleUpgrader2 = require('role.upgrader2');
 const roleUpgrader3 = require('role.upgrader3');
 const roleRepairer = require('role.repairer');
-const roleTowercharger = require('role.towercharger');
+const roleTowercharger = require('./role.towercharger');
 const roleTowercharger2 = require('role.towercharger2');
 const roleRemoteRepairAndBuilder = require('role.remoteRepairAndBuild');
 const roleClaimer = require('role.claimer');
+
+const towerLogic = require('./tower');
 
 
 const util = require('util');
@@ -214,15 +216,15 @@ module.exports = {
         const tower2 = getTower2();
 
         if(tower) {
-            if(!towerAttack(tower) && Game.time % 2 == 0) {
-                towerRepair(tower);
+            if(!towerLogic.towerAttack(tower) && Game.time % 2 == 0) {
+                towerLogic.towerRepair(tower);
             }
         } else {
             console.log('No tower1Id found!');
         }
         if(tower2) {
-            if(!towerAttack(tower2) && Game.time % 2 == 1) {
-                towerRepair(tower2);
+            if(!towerLogic.towerAttack(tower2) && Game.time % 2 == 1) {
+                towerLogic.towerRepair(tower2);
             }
         } else {
             console.log('No tower2 found!');
