@@ -1,5 +1,6 @@
 const roleHarvester = require('role.harvester');
 const roleHarvester2 = require('role.harvester2');
+const roleHarvester3 = require('role.harvester3');
 const roleHarvesterRemote = require('role.harvesterRemote');
 const roleUpgrader = require('role.upgrader');
 const roleUpgrader2 = require('role.upgrader2');
@@ -13,6 +14,8 @@ const roleClaimer = require('role.claimer');
 const roleMiner = require('role.miner');
 
 const roomE26S63 = require('room.E26S63');
+const roomE25S63 = require('room.E25S63');
+
 const util = require('util');
 
 const _ = require('lodash');
@@ -88,7 +91,18 @@ module.exports.loop = function () {
         }
     }
 
+    if(Game.time % 10 === 1 && Game.spawns['Spawn2'].spawning === null)
+    {
+        let logStr = "=========================\n"
+            + spawnLogic(roomE25S63, Game.spawns['Spawn1']);
+        console.log(logStr);
+        if(cntCreepsOfType('harvester') == 0) {
+            makeSmallHarvester();
+        }
+    }
+
     roomE26S63.towerRun();
+    roomE25S63.towerRun();
 
     for(let name in Game.creeps) {
         const creep = Game.creeps[name];
@@ -102,6 +116,9 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == 'harvester2') {
             roleHarvester2.run(creep);
+        }
+        if (creep.memory.role == 'harvester3') {
+            roleHarvester3.run(creep);
         }
         if (creep.memory.role == 'harvesterRemote') {
             roleHarvesterRemote.run(creep);

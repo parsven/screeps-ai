@@ -114,19 +114,26 @@ const towerRepair = function(t) {
 const roomToLeft = require('room.E25S63');
 
 
-const source1Id = '';
-const source2Id = '';
+const source1Id = '57ef9df686f108ae6e60e932';
+const source2Id = '57ef9df686f108ae6e60e933';
 
-const getTower = () => Game.getObjectById('58a84e66120c7b1c6451f132');
-const getTower2 = () => Game.getObjectById('58aed3482be237616065a48d');
+const tower1Id = '58a84e66120c7b1c6451f132';
+const tower2Id = '58aed3482be237616065a48d';
+
+const getTower = () => Game.getObjectById(tower1Id);
+const getTower2 = () => Game.getObjectById(tower2Id);
 
 const constructionSitesE26S63 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
     return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E26S63';
 });
 
+const constructionSitesE25S63 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
+    return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E25S63';
+});
+
 const always = function() {return true};
 
-const roomName = 'E26S63'
+const roomName = 'E26S63';
 
 module.exports = {
 
@@ -138,12 +145,19 @@ module.exports = {
             factory: () => roleUpgrader.factory(
                 Game.spawns['Spawn1'],
                 [MOVE,WORK,CARRY],
-                '57ef9df686f108ae6e60e932',
+                source1Id,
                 'Upgrader'
             )
         },
         Repairer: { rolename: 'repairer', factory: makeRepairer },
-        Towercharger: { rolename: 'towercharger', factory: makeTowercharger },
+        Towercharger: { rolename: 'towercharger',
+            factory: () => roleTowercharger.makeHarvestingTowerCharger (
+                Game.spawns['Spawn1'],
+                [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY],
+                source1Id,
+                tower1Id,
+                "TowerCharger")
+        },
         Towercharger2: { rolename: 'towercharger2', factory: makeTowercharger2 },
         Harvester2: { rolename: 'harvester2', factory: makeHarvester2 },
         HarvesterRemote: { rolename: 'harvesterRemote', factory: makeHarvesterRemote },
@@ -151,7 +165,7 @@ module.exports = {
             factory: () => roleBuilder.factory(
                 Game.spawns['Spawn1'],
                 [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE],
-                '57ef9df686f108ae6e60e933',
+                source2Id,
                 'BuildSource',
                 'Builder')
         },
@@ -169,7 +183,7 @@ module.exports = {
                     new RoomPosition(30,46, roomToLeft.roomName),
                     new RoomPosition(20,41, roomToLeft.roomName)],
                 'RemoteMineE25S63',
-                5)
+                7)
         },
         SmallHarvester: { rolename: 'harvester', factory: makeSmallHarvester }
 
@@ -181,11 +195,11 @@ module.exports = {
             , {role: 'Upgrader', cnt: 1, criteria: always}
             , {role: 'Repairer', cnt: 0, criteria: always}
             , {role: 'Harvester2', cnt: 3, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
-            , {role: 'Towercharger', cnt: 1, criteria: () => getTower().energy < 830}
+            , {role: 'Towercharger', cnt: 2, criteria: () => getTower().energy < 830}
             , {role: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
             , {role: 'RemoteMine', cnt: 1, criteria: always}
             , {role: 'HarvesterRemote', cnt: 4, criteria: always}
-            , {role: 'RemoteMineAndBuilder', cnt: 2, criteria: always}
+            , {role: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
             //    ,{role: 'Claimer', cnt: 2, criteria: always }
             , {role: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
             , {role: 'Upgrader2', cnt: 3, criteria: always}
@@ -204,7 +218,7 @@ module.exports = {
                 towerRepair(tower);
             }
         } else {
-            console.log('No tower1 found!');
+            console.log('No tower1Id found!');
         }
         if(tower2) {
             if(!towerAttack(tower2) && Game.time % 2 == 1) {

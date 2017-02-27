@@ -20,7 +20,7 @@ const roleBuilder = {
 
          //   _.shuffle(structs);
          //   structs.sort((a, b) => a.hits/a.hitsMax - b.hits/b.hitsMax);
-structs =[];
+  structs =[];
             if (structs.length > 0) {
        //         console.log("Repairing struct w hits=" + structs[0].hits);
                 if (creep.repair(structs[0]) == ERR_NOT_IN_RANGE) {
