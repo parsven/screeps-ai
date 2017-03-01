@@ -67,50 +67,6 @@ const makeClaimer = function() {
 };
 
 
-const towerAttack = function(t) {
-    const closestHostile = t.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-    if(closestHostile) {
-        console.log('Tower is attacking');
-        t.attack(closestHostile);
-        return true;
-    }
-    return false;
-};
-
-const towerRepair = function(t) {
-    const closestDamagedStructure = t.pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: function(structure) {
-            return structure.hits < structure.hitsMax &&
-                structure.structureType !== STRUCTURE_WALL &&
-                structure.structureType !== STRUCTURE_RAMPART;
-        }
-    });
-
-    if(closestDamagedStructure) {
-        //console.log("Repairing damaged strcure of type:" + closestDamagedStructure.structureType);
-        t.repair(closestDamagedStructure);
-    } else if(t.energy > 820) {
-        const damagedWalls = t.room.find(FIND_STRUCTURES, {
-            filter: function (structure) {
-                return structure.hits < 300000 &&
-                    (structure.structureType === STRUCTURE_WALL || structure.structureType === STRUCTURE_RAMPART)
-            }
-        });
-        if(damagedWalls.length > 0) {
-            //var item = damagedWalls[Math.floor(Math.random()*damagedWalls.length)];
-            const minHits = Math.min.apply(Math,damagedWalls.map(function(o){return o.hits;}));
-            const item = damagedWalls.find(function(o){ return o.hits == minHits; });
-            //          console.log("My energy is:" + t.energy + " reinforcing:" + item.structureType);
-            t.repair(item);
-        } else {
-            //          console.log("My energy is:" + t.energy + " no action taken!");
-        }
-    }
-};
-
-
-
-
 
 
 const roomToLeft = require('room.E25S63');
@@ -196,11 +152,11 @@ module.exports = {
             {role: 'Harvester', cnt: 4, criteria: () => Game.rooms[roomName].energyAvailable < 1400}
             , {role: 'Upgrader', cnt: 1, criteria: always}
             , {role: 'Repairer', cnt: 0, criteria: always}
-            , {role: 'Harvester2', cnt: 3, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
+            , {role: 'Harvester2', cnt: 2, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
             , {role: 'Towercharger', cnt: 2, criteria: () => getTower().energy < 830}
             , {role: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
-            , {role: 'RemoteMine', cnt: 1, criteria: always}
-            , {role: 'HarvesterRemote', cnt: 4, criteria: always}
+    //        , {role: 'RemoteMine', cnt: 1, criteria: always}
+  //          , {role: 'HarvesterRemote', cnt: 4, criteria: always}
             , {role: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
             //    ,{role: 'Claimer', cnt: 2, criteria: always }
             , {role: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}

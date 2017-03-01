@@ -23,7 +23,9 @@ var roleHarvester = {
                         structure.energy < structure.energyCapacity;
                 }
             });
-            if(targets.length == 0) {
+            const container = Game.getObjectById('58af8d5fdb3b7b23072eed6f');
+            const currentContainerLevel = container.store[RESOURCE_ENERGY];
+            if(targets.length == 0 && creep.memory.containerLevel &&  currentContainerLevel > creep.memory.containerLevel) {
                 targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_TOWER) &&

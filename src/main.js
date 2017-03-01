@@ -12,6 +12,8 @@ const roleTowercharger2 = require('role.towercharger2');
 const roleRemoteRepairAndBuilder = require('role.remoteRepairAndBuild');
 const roleClaimer = require('role.claimer');
 const roleMiner = require('role.miner');
+const roleUpgradeAt = require('role.upgradeAt');
+const roleContainerToContainer = require('./role.containerToContainer');
 
 const roomE26S63 = require('room.E26S63');
 const roomE25S63 = require('room.E25S63');
@@ -152,6 +154,12 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == roleMiner.role) {
             roleMiner.run(creep);
+        }
+        if (creep.memory.role.substring(0,9) === roleUpgradeAt.role) {
+            roleUpgradeAt.run(creep);
+        }
+        if(creep.memory.role == roleContainerToContainer.role) {
+            roleContainerToContainer.run(creep);
         }
     }
 };
