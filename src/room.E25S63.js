@@ -80,7 +80,7 @@ module.exports = {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role + '3',
                     Game.spawns['Spawn2'],
-                    2, 2,
+                    1, 1,
                     containerAtRoomController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(37, 29, 'E25S63')],
@@ -109,7 +109,7 @@ module.exports = {
             {role: 'EnergyLoader', cnt: 1, criteria: () => true},
             {role: 'UpgraderAt1', cnt: 1, criteria: () => true},
             {role: 'UpgraderAt2', cnt: 1, criteria: () => true},
-            {role: 'UpgraderAt3', cnt: 1, criteria: () => true},
+        //    {role: 'UpgraderAt3', cnt: 1, criteria: () => true},
             {role: 'SourceContainerToUpgradeContainer', cnt: 2, criteria: () => true}
         ]
     },

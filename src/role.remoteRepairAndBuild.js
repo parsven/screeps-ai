@@ -3,6 +3,7 @@ const roleBuilder = {
     /** @param {Creep} creep **/
     run: function (creep) {
 
+        if(Game.time %2 === 0) return;
         if (creep.memory.building && creep.carry.energy == 0) {
             creep.memory.building = false;
             creep.say('🔄 harvest');

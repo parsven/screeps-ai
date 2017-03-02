@@ -152,7 +152,7 @@ module.exports = {
             {role: 'Harvester', cnt: 4, criteria: () => Game.rooms[roomName].energyAvailable < 1400}
             , {role: 'Upgrader', cnt: 1, criteria: always}
             , {role: 'Repairer', cnt: 0, criteria: always}
-            , {role: 'Harvester2', cnt: 2, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
+         //   , {role: 'Harvester2', cnt: 2, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
             , {role: 'Towercharger', cnt: 2, criteria: () => getTower().energy < 830}
             , {role: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
     //        , {role: 'RemoteMine', cnt: 1, criteria: always}
