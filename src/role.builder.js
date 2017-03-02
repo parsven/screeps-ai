@@ -12,6 +12,8 @@ const roleBuilder = {
                 role: this.role,
                 sourceId: sourceId,
                 harvestFlagName: harvestFlagName,
+                spawnRoom: spawn.room.name,
+                roleName: roleName
             })
         } else {
             return undefined

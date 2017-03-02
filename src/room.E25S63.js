@@ -27,7 +27,9 @@ module.exports = {
                 const spawn = Game.spawns['Spawn2'];
                 const memory = {
                     role: 'harvester3',
-                    containerLevel: 400
+                    containerLevel: 400,
+                    spawnRoom: spawn.room.name,
+                    roleName: 'EnergyLoader'
                 };
                 const body = [CARRY, CARRY, MOVE, MOVE];
                 if (OK == spawn.canCreateCreep(body, name)) {

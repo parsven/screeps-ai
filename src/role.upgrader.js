@@ -9,6 +9,8 @@ const roleUpgrader = {
                 role: this.role,
                 sourceId: sourceId,
                 harvestPos: harvestPos,
+                spawnRoom: spawn.room.name,
+                roleName: roleName
             })
         } else {
             return undefined

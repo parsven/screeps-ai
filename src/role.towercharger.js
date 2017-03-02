@@ -11,7 +11,9 @@ const roleTowercharger = {
             return spawn.createCreep(body, name, {
                 role: this.role,
                 sourceId: sourceId,
-                towerId: towerId
+                towerId: towerId,
+                spawnRoom: spawn.room.name,
+                roleName: roleName
             })
         } else {
             return undefined
@@ -24,7 +26,9 @@ const roleTowercharger = {
             return spawn.createCreep(body, name, {
                 role: this.role,
                 withdrawStructureId: withdrawStructureId,
-                towerId: towerId
+                towerId: towerId,
+                spawnRoom: spawn.room.name,
+                roleName: roleName
             })
         } else {
             return undefined

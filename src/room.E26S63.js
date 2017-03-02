@@ -22,44 +22,41 @@ const util = require('util');
 
 
 const makeRemoteRepairAndBuilder = function() {
-    util.build('remoteMineAndBuilder', [WORK, CARRY, CARRY, MOVE, MOVE]);
+    util.build('remoteMineAndBuilder', [WORK, CARRY, CARRY, MOVE, MOVE], "RemoteRepairAndBuilder");
 };
 
 const makeSmallHarvester = function() {
-    util.build('harvester', [WORK, CARRY, MOVE]);
+    util.build('harvester', [WORK, CARRY, MOVE], "SmallHarvester");
 };
 
 const makeHarvester = function() {
-    util.build('harvester', [MOVE,WORK,WORK,WORK,CARRY]);
+    util.build('harvester', [MOVE,WORK,WORK,WORK,CARRY], "Harvester");
 };
 
 const makeHarvester2 = function() {
-    util.build('harvester2', [MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY]);
+    util.build('harvester2', [MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY], "Harvester2");
 };
 
 const makeHarvesterRemote = function() {
-    util.build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,WORK, WORK, WORK]);
+    util.build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,WORK, WORK, WORK], "HarvesterRemote");
 };
 
 
 const makeUpgrader2 = function() {
-    util.build('upgrader2', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    util.build('upgrader2', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "Upgrader2");
 };
 
 const makeUpgrader3 = function() {
-    util.build('upgrader3', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    util.build('upgrader3', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "Upgrader3");
 };
 
 const makeRepairer = function() {
     util.build('repairer', [WORK, CARRY, MOVE, MOVE]);
 };
 
-const makeTowercharger = function() {
-    util.build('towercharger', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
-};
 
 const makeTowercharger2 = function() {
-    util.build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY]);
+    util.build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "TowerCharger2");
 };
 
 const makeClaimer = function() {

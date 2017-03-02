@@ -12,7 +12,9 @@ const roleContainerToContainer = {
                 sourcePos: sourcePos,
                 sourceContainerId: sourceContainerId,
                 destPos:destPos,
-                destContainerId:destContainerId
+                destContainerId:destContainerId,
+                spawnRoom: spawn.room.name,
+                roleName: roleName
             })
         } else {
             return undefined

@@ -19,7 +19,9 @@ module.exports = {
                 pathIndex: 0,
                 sourceId: sourceId,
                 controllerId: controllerId,
-                repairInterval: repairInterval
+                repairInterval: repairInterval,
+                spawnRoom: spawn.room.name,
+                roleName: roleName
             })
         } else {
             return undefined
@@ -65,14 +67,8 @@ module.exports = {
                             return;
                         }
                     }
-                    console.log('sourceId:' + m.sourceId);
-                    const o = Game.getObjectById(m.sourceId);
-                    console.log('o:' + JSON.stringify(o));
-                    const r = creep.withdraw(Game.getObjectById(m.sourceId), RESOURCE_ENERGY);
-                    console.log('r:' + r);
+                    creep.withdraw(Game.getObjectById(m.sourceId), RESOURCE_ENERGY);
                 }
-
-                // }
             }
         } else {
             let targetPos = m.path[m.pathIndex];
@@ -88,7 +84,7 @@ module.exports = {
                 // At all earlier way points its enough to be near them.
                 if(creep.pos.isNearTo(dest)) {
                     m.pathIndex++;
-                    targetPos = m.path[m.pathIndex]
+                    targetPos = m.path[m.pathIndex];
                     dest = new RoomPosition(targetPos.x, targetPos.y, targetPos.roomName);
                 }
             }

@@ -85,7 +85,7 @@ module.exports.loop = function () {
 
     if(Game.time % 10 === 0 && Game.spawns['Spawn1'].spawning === null)
     {
-        let logStr = "=========================\n"
+        let logStr = "======== E26S63 =================\n"
             + spawnLogic(roomE26S63, Game.spawns['Spawn1']);
         console.log(logStr);
         if(cntCreepsOfType('harvester') == 0) {
@@ -95,8 +95,8 @@ module.exports.loop = function () {
 
     if(Game.time % 10 === 1 && Game.spawns['Spawn2'].spawning === null)
     {
-        let logStr = "=========================\n"
-            + spawnLogic(roomE25S63, Game.spawns['Spawn1']);
+        let logStr = "======== E25S63 =================\n"
+            + spawnLogic(roomE25S63, Game.spawns['Spawn2']);
         console.log(logStr);
         if(cntCreepsOfType('harvester') == 0) {
             makeSmallHarvester();

@@ -29,7 +29,9 @@ module.exports = {
                 pathIndex: 0,
                 sourceId: sourceId,
                 working: false,
-                repairInterval: repairInterval
+                repairInterval: repairInterval,
+                spawnRoom: spawn.room.name,
+                roleName: roleName
             })
         } else {
             return undefined
