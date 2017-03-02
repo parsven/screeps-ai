@@ -56,7 +56,7 @@ const makeRepairer = function() {
 
 
 const makeTowercharger2 = function() {
-    util.build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "TowerCharger2");
+    util.build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "Towercharger2");
 };
 
 const makeClaimer = function() {
@@ -111,7 +111,7 @@ module.exports = {
                 [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY],
                 source1Id,
                 tower1Id,
-                "TowerCharger")
+                "Towercharger")
         },
         Towercharger2: { rolename: 'towercharger2', factory: makeTowercharger2 },
         Harvester2: { rolename: 'harvester2', factory: makeHarvester2 },
@@ -137,7 +137,7 @@ module.exports = {
                     new RoomPosition(1,41, roomName),
                     new RoomPosition(30,46, roomToLeft.roomName),
                     new RoomPosition(20,41, roomToLeft.roomName)],
-                'RemoteMineE25S63',
+                'RemoteMine',
                 7)
         },
         SmallHarvester: { rolename: 'harvester', factory: makeSmallHarvester }

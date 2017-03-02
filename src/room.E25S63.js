@@ -46,7 +46,7 @@ module.exports = {
                 Game.spawns['Spawn2'],
                 module.exports.sourceId,
                 [new RoomPosition(20, 41, module.exports.roomName)],
-                'TheMiner')
+                'Miner')
         },
         UpgraderAt1: {
             rolename: roleUpgraderAt.role + '1',
@@ -58,7 +58,7 @@ module.exports = {
                     containerAtRoomController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(37, 28, 'E25S63')],
-                    'Upgrader1',
+                    'UpgraderAt1',
                     16);
             }
         },
@@ -72,7 +72,7 @@ module.exports = {
                     containerAtRoomController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(36, 28, 'E25S63')],
-                    'Upgrader2',
+                    'UpgraderAt2',
                     16);
             }
         },
@@ -86,7 +86,7 @@ module.exports = {
                     containerAtRoomController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(37, 29, 'E25S63')],
-                    'Upgrader3',
+                    'UpgraderAt3',
                     16);
             }
         },
@@ -100,7 +100,7 @@ module.exports = {
                     new RoomPosition(36,29,'E25S63'),
                     '58b5dd69acca48f132708228',
                     [CARRY, CARRY, CARRY, MOVE, MOVE],
-                    "SourceToUpgrader"
+                    "SourceContainerToUpgradeContainer"
                 );
             }
         }

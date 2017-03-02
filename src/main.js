@@ -22,9 +22,9 @@ const util = require('util');
 
 const _ = require('lodash');
 
-const cntCreepsOfType = function (t) {
+const cntCreepsOfType = function (t, roomName) {
     return _.filter(Game.creeps, function (o) {
-        return o.memory.role === t
+        return o.memory.taskName == t;// && o.memory.spawnRoom == roomName;
     }).length;
 };
 
@@ -45,8 +45,8 @@ const spawnLogic = function(spawnRoom, spawn) {
         if(role === undefined) {
             console.log("role:" + r.role + " is undefined!");
         }
-        const rolename = role.rolename;
-        const currentCnt = cntCreepsOfType(rolename);
+
+        const currentCnt = cntCreepsOfType(r.role, spawn.room.name);
         const line = "[" + currentCnt + "/" + r.cnt + "] " + r.role;
         if(r.criteria()) {
             str = str + "  " + line +"\n";
@@ -89,7 +89,7 @@ module.exports.loop = function () {
             + spawnLogic(roomE26S63, Game.spawns['Spawn1']);
         console.log(logStr);
         if(cntCreepsOfType('harvester') == 0) {
-            makeSmallHarvester();
+//            makeSmallHarvester();
         }
     }
 
@@ -99,7 +99,7 @@ module.exports.loop = function () {
             + spawnLogic(roomE25S63, Game.spawns['Spawn2']);
         console.log(logStr);
         if(cntCreepsOfType('harvester') == 0) {
-            makeSmallHarvester();
+  //          makeSmallHarvester();
         }
     }
 
@@ -108,9 +108,9 @@ module.exports.loop = function () {
 
     for(let name in Game.creeps) {
         const creep = Game.creeps[name];
-        
+
         if(Game.time % 3 ===0) {
-            creep.say(creep.memory.role);
+            creep.say(creep.memory.taskName);
         }
 
         if (creep.memory.role == 'harvester') {
