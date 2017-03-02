@@ -5,30 +5,30 @@ const roleTowercharger = {
 
     role: 'towercharger',
 
-    makeHarvestingTowerCharger: function (spawn, body, sourceId, towerId, roleName) {
-        const name = roleName + '-' + Game.time;
+    makeHarvestingTowerCharger: function (spawn, body, sourceId, towerId, taskName) {
+        const name = taskName + '-' + Game.time;
         if( OK == spawn.canCreateCreep(body, name)) {
             return spawn.createCreep(body, name, {
                 role: this.role,
                 sourceId: sourceId,
                 towerId: towerId,
                 spawnRoom: spawn.room.name,
-                roleName: roleName
+                taskName: taskName
             })
         } else {
             return undefined
         }
     },
 
-    makeWithdrawingTowerCharger: function (spawn, body, withdrawStructureId, towerId, roleName) {
-        const name = roleName + '-' + Game.time;
+    makeWithdrawingTowerCharger: function (spawn, body, withdrawStructureId, towerId, taskName) {
+        const name = taskName + '-' + Game.time;
         if( OK == spawn.canCreateCreep(body, name)) {
             return spawn.createCreep(body, name, {
                 role: this.role,
                 withdrawStructureId: withdrawStructureId,
                 towerId: towerId,
                 spawnRoom: spawn.room.name,
-                roleName: roleName
+                taskName: taskName
             })
         } else {
             return undefined

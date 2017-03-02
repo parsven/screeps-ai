@@ -2,15 +2,15 @@ const roleUpgrader = {
 
     role: 'upgrader',
 
-    factory: function (spawn, body, sourceId, roleName, harvestPos) {
-        const name = roleName + '-' + Game.time;
+    factory: function (spawn, body, sourceId, taskName, harvestPos) {
+        const name = taskName + '-' + Game.time;
         if( OK == spawn.canCreateCreep(body, name)) {
             return spawn.createCreep(body, name, {
                 role: this.role,
                 sourceId: sourceId,
                 harvestPos: harvestPos,
                 spawnRoom: spawn.room.name,
-                roleName: roleName
+                taskName: taskName
             })
         } else {
             return undefined

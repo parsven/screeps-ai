@@ -29,7 +29,7 @@ module.exports = {
                     role: 'harvester3',
                     containerLevel: 400,
                     spawnRoom: spawn.room.name,
-                    roleName: 'EnergyLoader'
+                    taskName: 'EnergyLoader'
                 };
                 const body = [CARRY, CARRY, MOVE, MOVE];
                 if (OK == spawn.canCreateCreep(body, name)) {

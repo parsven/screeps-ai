@@ -5,9 +5,9 @@ module.exports = {
         return 100 * workUnits + 50 * moveUnits + 50;
     },
 
-    factory: function (role, spawn, workUnits, moveUnits, sourceId, controllerId, path, roleName, repairInterval) {
+    factory: function (role, spawn, workUnits, moveUnits, sourceId, controllerId, path, taskName, repairInterval) {
         const _ = require('lodash');
-        const name = roleName + '-' + Game.time;
+        const name = taskName + '-' + Game.time;
         let body = [];
         _.times(workUnits, ()=> body.push(WORK));
         _.times(moveUnits, ()=> body.push(MOVE));
@@ -21,7 +21,7 @@ module.exports = {
                 controllerId: controllerId,
                 repairInterval: repairInterval,
                 spawnRoom: spawn.room.name,
-                roleName: roleName
+                taskName: taskName
             })
         } else {
             return undefined

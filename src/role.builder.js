@@ -5,15 +5,15 @@ const roleBuilder = {
 
     role: 'builder',
 
-    factory: function (spawn, body, sourceId, harvestFlagName, roleName) {
-        const name = roleName + '-' + Game.time;
+    factory: function (spawn, body, sourceId, harvestFlagName, taskName) {
+        const name = taskName + '-' + Game.time;
         if( OK == spawn.canCreateCreep(body, name)) {
             return spawn.createCreep(body, name, {
                 role: this.role,
                 sourceId: sourceId,
                 harvestFlagName: harvestFlagName,
                 spawnRoom: spawn.room.name,
-                roleName: roleName
+                taskName: taskName
             })
         } else {
             return undefined

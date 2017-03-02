@@ -5,17 +5,17 @@ module.exports = {
         return this.energyCost(6,3)
     },
 
-    maxFactory: function(spawn, sourceId, path, roleName, repairInteval) {
-        return this.factory(spawn, 6, 3, sourceId, path, roleName, repairInteval)
+    maxFactory: function(spawn, sourceId, path, taskName, repairInteval) {
+        return this.factory(spawn, 6, 3, sourceId, path, taskName, repairInteval)
     },
 
     energyCost: function (workUnits, moveUnits) {
         return 100 * workUnits + 50 * moveUnits + 50;
     },
 
-    factory: function (spawn, workUnits, moveUnits, sourceId, path, roleName, repairInterval) {
+    factory: function (spawn, workUnits, moveUnits, sourceId, path, taskName, repairInterval) {
         const _ = require('lodash');
-        const name = roleName + '-' + Game.time;
+        const name = taskName + '-' + Game.time;
         let body = [];
         _.times(workUnits, ()=> body.push(WORK));
         _.times(moveUnits, ()=> body.push(MOVE));
@@ -31,7 +31,7 @@ module.exports = {
                 working: false,
                 repairInterval: repairInterval,
                 spawnRoom: spawn.room.name,
-                roleName: roleName
+                taskName: taskName
             })
         } else {
             return undefined

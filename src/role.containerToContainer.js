@@ -4,8 +4,8 @@
 const roleContainerToContainer = {
     role:  'container2container',
 
-    factory: function(spawn, sourcePos, sourceContainerId, destPos, destContainerId, body, roleName) {
-        const name = roleName + '-' + Game.time;
+    factory: function(spawn, sourcePos, sourceContainerId, destPos, destContainerId, body, taskName) {
+        const name = taskName + '-' + Game.time;
         if( OK == spawn.canCreateCreep(body, name)) {
             return spawn.createCreep(body, name, {
                 role: this.role,
@@ -14,7 +14,7 @@ const roleContainerToContainer = {
                 destPos:destPos,
                 destContainerId:destContainerId,
                 spawnRoom: spawn.room.name,
-                roleName: roleName
+                taskName: taskName
             })
         } else {
             return undefined
