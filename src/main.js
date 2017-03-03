@@ -24,7 +24,7 @@ const _ = require('lodash');
 
 const cntCreepsOfType = function (t, roomName) {
     return _.filter(Game.creeps, function (o) {
-        return o.memory.taskName == t;// && o.memory.spawnRoom == roomName;
+        return o.memory.taskName == t && o.memory.spawnRoom == roomName;
     }).length;
 };
 

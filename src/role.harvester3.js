@@ -33,6 +33,13 @@ var roleHarvester = {
                     }
                 });
             }
+
+            if(targets.length == 0 && creep.memory.containerLevel &&  currentContainerLevel > creep.memory.containerLevel) {
+                targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => structure.structureType == STRUCTURE_STORAGE
+                });
+            }
+
             if (targets.length > 0) {
                 const target = creep.pos.findClosestByRange(targets);
 
