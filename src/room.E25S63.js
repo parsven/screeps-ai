@@ -1,6 +1,6 @@
 
 
-const harvester3 = require('./role.harvester3');
+const energyLoader = require('./role.energyLoader');
 const util = require('./util');
 const towerLogic = require('./tower');
 const roleMiner = require('./role.miner');
@@ -12,6 +12,7 @@ const towerId = '58b32e405ebfe4af390a6e4d';
 
 
 const containerAtRoomController = '58b5dd69acca48f132708228';
+const containerAtEnergySource = '58af8d5fdb3b7b23072eed6f';
 
 
 module.exports = {
@@ -21,13 +22,13 @@ module.exports = {
 
     roleDefs: {
         EnergyLoader: {
-            rolename: 'harvester3',
             factory: () => {
                 const name = 'EnergyLoader-' + Game.time;
                 const spawn = Game.spawns['Spawn2'];
                 const memory = {
-                    role: 'harvester3',
+                    role: energyLoader.role,
                     containerLevel: 400,
+                    containerId: containerAtEnergySource,
                     spawnRoom: spawn.room.name,
                     taskName: 'EnergyLoader'
                 };
@@ -41,7 +42,6 @@ module.exports = {
             }
         },
         Miner: {
-            rolename: roleMiner.role,
             factory: () => roleMiner.maxFactory(
                 Game.spawns['Spawn2'],
                 module.exports.sourceId,
@@ -49,12 +49,11 @@ module.exports = {
                 'Miner')
         },
         UpgraderAt1: {
-            rolename: roleUpgraderAt.role + '1',
             factory: () => {
                 roleUpgraderAt.factory(
-                    roleUpgraderAt.role + '1',
+                    roleUpgraderAt.role,
                     Game.spawns['Spawn2'],
-                    2, 2,
+                    3, 2,
                     containerAtRoomController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(37, 28, 'E25S63')],
@@ -63,12 +62,11 @@ module.exports = {
             }
         },
         UpgraderAt2: {
-            rolename: roleUpgraderAt.role + '2',
             factory: () => {
                 roleUpgraderAt.factory(
-                    roleUpgraderAt.role + '2',
+                    roleUpgraderAt.role,
                     Game.spawns['Spawn2'],
-                    3, 2,
+                    4, 3,
                     containerAtRoomController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(36, 28, 'E25S63')],
@@ -77,10 +75,9 @@ module.exports = {
             }
         },
         UpgraderAt3: {
-            rolename: roleUpgraderAt.role + '3',
             factory: () => {
                 roleUpgraderAt.factory(
-                    roleUpgraderAt.role + '3',
+                    roleUpgraderAt.role,
                     Game.spawns['Spawn2'],
                     2, 2,
                     containerAtRoomController, //ContainerId
@@ -91,7 +88,6 @@ module.exports = {
             }
         },
         SourceContainerToUpgradeContainer: {
-            rolename: roleContainerToContainer.role,
             factory: () => {
                 roleContainerToContainer.factory(
                     Game.spawns['Spawn2'],

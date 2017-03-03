@@ -1,6 +1,6 @@
 const roleHarvester = require('role.harvester');
 const roleHarvester2 = require('role.harvester2');
-const roleHarvester3 = require('role.harvester3');
+const roleEnergyLoader = require('./role.energyLoader');
 const roleHarvesterRemote = require('role.harvesterRemote');
 const roleUpgrader = require('role.upgrader');
 const roleUpgrader2 = require('role.upgrader2');
@@ -119,8 +119,8 @@ module.exports.loop = function () {
         if (creep.memory.role == 'harvester2') {
             roleHarvester2.run(creep);
         }
-        if (creep.memory.role == 'harvester3') {
-            roleHarvester3.run(creep);
+        if (creep.memory.role == 'harvester3' || creep.memory.role == roleEnergyLoader.role) {
+            roleEnergyLoader.run(creep);
         }
         if (creep.memory.role == 'harvesterRemote') {
             roleHarvesterRemote.run(creep);

@@ -1,4 +1,6 @@
-var roleHarvester = {
+var roleEnergyLoader = {
+
+    role: 'energyLoader',
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -23,7 +25,7 @@ var roleHarvester = {
                         structure.energy < structure.energyCapacity;
                 }
             });
-            const container = Game.getObjectById('58af8d5fdb3b7b23072eed6f');
+            const container = Game.getObjectById(creep.memory.containerId);
             const currentContainerLevel = container.store[RESOURCE_ENERGY];
             if(targets.length == 0 && creep.memory.containerLevel &&  currentContainerLevel > creep.memory.containerLevel) {
                 targets = creep.room.find(FIND_STRUCTURES, {
@@ -54,7 +56,7 @@ var roleHarvester = {
             }
         } else {
 //            var sources = creep.room.find(FIND_SOURCES);
-            const source = Game.getObjectById('58af8d5fdb3b7b23072eed6f');
+            const source = Game.getObjectById(creep.memory.containerId);
             const res = creep.withdraw(source, RESOURCE_ENERGY);
             if (res== ERR_NOT_IN_RANGE) {
     //            console.log("banan");
@@ -66,4 +68,4 @@ var roleHarvester = {
     }
 };
 
-module.exports = roleHarvester;
+module.exports = roleEnergyLoader;
