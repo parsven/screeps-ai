@@ -1,22 +1,11 @@
 
-const roleBuilder = require('role.builder');
-const roleMiner = require('role.miner');
-
-
-const roleHarvester = require('role.harvester');
-const roleHarvester2 = require('role.harvester2');
-const roleHarvesterRemote = require('role.harvesterRemote');
-const roleUpgrader = require('role.upgrader');
-const roleUpgrader2 = require('role.upgrader2');
-const roleUpgrader3 = require('role.upgrader3');
-const roleRepairer = require('role.repairer');
+const roleBuilder = require('./role.builder');
+const roleMiner = require('./role.miner');
+const roleUpgrader = require('./role.upgrader');
 const roleTowercharger = require('./role.towercharger');
-const roleTowercharger2 = require('role.towercharger2');
-const roleRemoteRepairAndBuilder = require('role.remoteRepairAndBuild');
-const roleClaimer = require('role.claimer');
+const roleClaimer = require('./role.claimer');
 const roleContainerToContainer = require('./role.containerToContainer');
 const roleEnergyLoader = require('./role.energyLoader');
-
 const roleUpgraderAt = require('./role.upgradeAt');
 
 const towerLogic = require('./tower');
@@ -37,31 +26,12 @@ const makeHarvester = function() {
     util.build('harvester', [MOVE,WORK,CARRY], "Harvester");
 };
 
-const makeHarvester2 = function() {
-    util.build('harvester2', [MOVE,MOVE,WORK,WORK,WORK,CARRY, CARRY], "Harvester2");
-};
 
-const makeHarvesterRemote = function() {
-    util.build('harvesterRemote', [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,WORK, WORK, WORK], "HarvesterRemote");
-};
-
-
-const makeUpgrader2 = function() {
-    util.build('upgrader2', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "Upgrader2");
-};
-
-const makeUpgrader3 = function() {
-    util.build('upgrader3', [MOVE,MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "Upgrader3");
-};
 
 const makeRepairer = function() {
     util.build('repairer', [WORK, CARRY, MOVE, MOVE]);
 };
 
-
-const makeTowercharger2 = function() {
-    util.build('towercharger2', [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY], "Towercharger2");
-};
 
 const makeClaimer = function() {
     util.build('claimer', [MOVE,MOVE,CLAIM]);
@@ -70,7 +40,7 @@ const makeClaimer = function() {
 
 
 
-const roomToLeft = require('room.E25S63');
+const roomToLeft = require('./room.E25S63');
 
 const containerAboveRightOfRoomControlerId = '58b790af5dfd8b1f7a03aabf';
 const containerAboveLeftOfRoomControlerId = '58bb4818aaee09a45b0ac6b9';
@@ -133,8 +103,6 @@ module.exports = {
                 tower2Id,
                 "Towercharger2")
         },
-        Harvester2: {  factory: makeHarvester2 },
-        HarvesterRemote: { factory: makeHarvesterRemote },
         Builder: {
             factory: () => roleBuilder.factory(
                 Game.spawns['Spawn1'],
@@ -143,8 +111,6 @@ module.exports = {
                 'BuildSource',
                 'Builder')
         },
-        Upgrader2: { factory: makeUpgrader2 },
-        Upgrader3: { factory: makeUpgrader3 },
         Claimer: {  factory: makeClaimer },
         RemoteMineAndBuilder: { factory: makeRemoteRepairAndBuilder },
         RemoteMine: {
@@ -279,11 +245,8 @@ module.exports = {
 
 
             , {role: 'Repairer', cnt: 0, criteria: () => false}
-         //   , {role: 'Harvester2', cnt: 2, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
             , {role: 'Towercharger', cnt: 1, criteria: () => getTower().energy < 830}
             , {role: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
-    //        , {role: 'RemoteMine', cnt: 1, criteria: always}
-  //          , {role: 'HarvesterRemote', cnt: 4, criteria: always}
 
             , {role: 'UpgraderAt1', cnt: 1, criteria: () => true }
             , {role: 'UpgraderAt3', cnt: 1, criteria: () => true }
@@ -292,11 +255,7 @@ module.exports = {
             , {role: 'UpgraderAt4', cnt: 1, criteria: () => true }
 
             , {role: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
-            //    ,{role: 'Claimer', cnt: 2, criteria: always }
             , {role: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
-  //          , {role: 'Upgrader2', cnt: 3, criteria: always}
-  //          , {role: 'Upgrader3', cnt: 2, criteria: () => constructionSitesE26S63().length === 0}
-
 
         ],
         fallback: {role: 'SmallHarvester', max: 2, always}

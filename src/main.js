@@ -1,24 +1,20 @@
-const roleHarvester = require('role.harvester');
-const roleHarvester2 = require('role.harvester2');
+const roleHarvester = require('./role.harvester');
 const roleEnergyLoader = require('./role.energyLoader');
-const roleHarvesterRemote = require('role.harvesterRemote');
-const roleUpgrader = require('role.upgrader');
-const roleUpgrader2 = require('role.upgrader2');
-const roleUpgrader3 = require('role.upgrader3');
-const roleBuilder = require('role.builder');
-const roleRepairer = require('role.repairer');
-const roleTowercharger = require('role.towercharger');
-const roleTowercharger2 = require('role.towercharger2');
-const roleRemoteRepairAndBuilder = require('role.remoteRepairAndBuild');
-const roleClaimer = require('role.claimer');
-const roleMiner = require('role.miner');
-const roleUpgradeAt = require('role.upgradeAt');
+const roleHarvesterRemote = require('./role.harvesterRemote');
+const roleUpgrader = require('./role.upgrader');
+const roleBuilder = require('./role.builder');
+const roleRepairer = require('./role.repairer');
+const roleTowercharger = require('./role.towercharger');
+const roleRemoteRepairAndBuilder = require('./role.remoteRepairAndBuild');
+const roleClaimer = require('./role.claimer');
+const roleMiner = require('./role.miner');
+const roleUpgradeAt = require('./role.upgradeAt');
 const roleContainerToContainer = require('./role.containerToContainer');
 
-const roomE26S63 = require('room.E26S63');
-const roomE25S63 = require('room.E25S63');
+const roomE26S63 = require('./room.E26S63');
+const roomE25S63 = require('./room.E25S63');
 
-const util = require('util');
+const util = require('./util');
 
 const _ = require('lodash');
 
@@ -139,10 +135,7 @@ module.exports.loop = function () {
         if (creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
-        if (creep.memory.role == 'harvester2') {
-            roleHarvester2.run(creep);
-        }
-        if (creep.memory.role == 'harvester3' || creep.memory.role == roleEnergyLoader.role) {
+        if (creep.memory.role == roleEnergyLoader.role) {
             roleEnergyLoader.run(creep);
         }
         if (creep.memory.role == 'harvesterRemote') {
@@ -150,12 +143,6 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);
-        }
-        if (creep.memory.role == 'upgrader2') {
-            roleUpgrader2.run(creep);
-        }
-        if (creep.memory.role == 'upgrader3') {
-            roleUpgrader3.run(creep);
         }
         if (creep.memory.role == 'builder') {
             roleBuilder.run(creep);
@@ -165,9 +152,6 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == 'towercharger') {
             roleTowercharger.run(creep);
-        }
-        if (creep.memory.role == 'towercharger2') {
-            roleTowercharger2.run(creep);
         }
         if (creep.memory.role == 'remoteMineAndBuilder') {
             roleRemoteRepairAndBuilder.run(creep);
