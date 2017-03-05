@@ -22,6 +22,29 @@ const util = require('util');
 
 const _ = require('lodash');
 
+
+
+// TODO: Taskname i roledefs, skicka som en parameter till factory istället för att hårdkoda.
+
+
+// TODO: rename roleDefs to taskDefs
+
+//todo: rename role: to task:
+
+//todo: remove harvester3 reference in main dispatcher.
+//todo: rename Source2ContainerToUpgradeContainer to Source2Container_To_UpgradeContainer
+
+// Todo: om en invasion innehåller två creeps, varav en healer, måste de två tornen skjuta på varsitt mål!
+// Todo: om invasion, se till att tanka tornen från tanken!
+// Helt enkelt, inför en 'under siege'-strategi, och ha regler som bestämmer vilken strategi tornen ska ha i olika scenrier..
+
+// TODO: Skriva funtioner för att byta roll på en creep, dvs en factory som istället för att göra en ny creep, byter memory på den.
+
+// TODO: Göra så att energyLoader plockar upp energi på marken om in range.
+// TODO: Låt energyLoader ha ett mergency-mode som aktiveras om tornen är < threshold, och hämtar då energi från tanken.
+
+
+
 const cntCreepsOfType = function (t, roomName) {
     return _.filter(Game.creeps, function (o) {
         return o.memory.taskName == t && o.memory.spawnRoom == roomName;

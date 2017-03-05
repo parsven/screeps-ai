@@ -59,7 +59,12 @@ const roleContainerToContainer = {
                     return;
                 }
             }
-            if (sourceContainer) {
+            let containerLevel = 0;
+            if(creep.memory.containerLevel) {
+                containerLevel = creep.memory.containerLevel;
+            }
+            //Todo, lägg till containerLevel som en facotry parameter!
+            if (sourceContainer && sourceContainer.store[RESOURCE_ENERGY] > containerLevel) {
                 if (ERR_NOT_IN_RANGE === creep.withdraw(sourceContainer, RESOURCE_ENERGY)) {
                     creep.moveTo(sourceContainer);
                 }

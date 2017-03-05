@@ -27,7 +27,7 @@ module.exports = {
                 const spawn = Game.spawns['Spawn2'];
                 const memory = {
                     role: energyLoader.role,
-                    containerLevel: 400,
+                    containerLevel: 1,
                     containerId: containerAtEnergySource,
                     spawnRoom: spawn.room.name,
                     taskName: 'EnergyLoader'

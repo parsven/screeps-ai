@@ -15,8 +15,9 @@ const roleTowercharger2 = require('role.towercharger2');
 const roleRemoteRepairAndBuilder = require('role.remoteRepairAndBuild');
 const roleClaimer = require('role.claimer');
 const roleContainerToContainer = require('./role.containerToContainer');
+const roleEnergyLoader = require('./role.energyLoader');
 
-const roleUpgraderAt = require('./role.upgradeAt')
+const roleUpgraderAt = require('./role.upgradeAt');
 
 const towerLogic = require('./tower');
 
@@ -33,7 +34,7 @@ const makeSmallHarvester = function() {
 };
 
 const makeHarvester = function() {
-    util.build('harvester', [MOVE,WORK,WORK,WORK,CARRY], "Harvester");
+    util.build('harvester', [MOVE,WORK,CARRY], "Harvester");
 };
 
 const makeHarvester2 = function() {
@@ -72,9 +73,14 @@ const makeClaimer = function() {
 const roomToLeft = require('room.E25S63');
 
 const containerAboveRightOfRoomControlerId = '58b790af5dfd8b1f7a03aabf';
+const containerAboveLeftOfRoomControlerId = '58bb4818aaee09a45b0ac6b9';
+
+
 const source2ContainerId = '58b7a3cd1014096b282bcf34';
 
 const roomControllerId = '57ef9df686f108ae6e60e934';
+
+const containerAtSource1Id = '58b77e38fb6ac8904f67a009';
 
 const source1Id = '57ef9df686f108ae6e60e932';
 const source2Id = '57ef9df686f108ae6e60e933';
@@ -102,40 +108,46 @@ module.exports = {
     roomName : roomName,
 
     roleDefs: {
-        Harvester: {  rolename: 'harvester', factory: makeHarvester },
-        Upgrader: { rolename: roleUpgrader.role,
+        Harvester: {  factory: makeHarvester },
+        Upgrader: {
             factory: () => roleUpgrader.factory(
                 Game.spawns['Spawn1'],
-                [MOVE,MOVE, WORK,WORK, WORK, CARRY, CARRY],
+                [MOVE, WORK, CARRY],
                 source1Id,
                 'Upgrader'
             )
         },
-        Repairer: { rolename: 'repairer', factory: makeRepairer },
-        Towercharger: { rolename: 'towercharger',
-            factory: () => roleTowercharger.makeHarvestingTowerCharger (
+        Repairer: { factory: makeRepairer },
+        Towercharger: {
+            factory: () => roleTowercharger.makeWithdrawingTowerCharger(
                 Game.spawns['Spawn1'],
-                [MOVE,MOVE,WORK,WORK,WORK,CARRY,CARRY],
-                source1Id,
+                [MOVE,MOVE,CARRY,CARRY],
+                containerAtSource1Id,
                 tower1Id,
                 "Towercharger")
         },
-        Towercharger2: { rolename: 'towercharger2', factory: makeTowercharger2 },
-        Harvester2: { rolename: 'harvester2', factory: makeHarvester2 },
-        HarvesterRemote: { rolename: 'harvesterRemote', factory: makeHarvesterRemote },
-        Builder: { rolename: roleBuilder.role,
+        Towercharger2: { factory: () => roleTowercharger.makeWithdrawingTowerCharger(
+                Game.spawns['Spawn1'],
+                [MOVE,MOVE,CARRY,CARRY],
+                containerAtSource1Id,
+                tower2Id,
+                "Towercharger2")
+        },
+        Harvester2: {  factory: makeHarvester2 },
+        HarvesterRemote: { factory: makeHarvesterRemote },
+        Builder: {
             factory: () => roleBuilder.factory(
                 Game.spawns['Spawn1'],
                 [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE],
-                source2Id,
+                source1Id,
                 'BuildSource',
                 'Builder')
         },
-        Upgrader2: { rolename: 'upgrader2', factory: makeUpgrader2 },
-        Upgrader3: { rolename: 'upgrader3', factory: makeUpgrader3 },
-        Claimer: { rolename: 'claimer', factory: makeClaimer },
-        RemoteMineAndBuilder: { rolename: 'remoteMineAndBuilder', factory: makeRemoteRepairAndBuilder },
-        RemoteMine: { rolename: roleMiner.role,
+        Upgrader2: { factory: makeUpgrader2 },
+        Upgrader3: { factory: makeUpgrader3 },
+        Claimer: {  factory: makeClaimer },
+        RemoteMineAndBuilder: { factory: makeRemoteRepairAndBuilder },
+        RemoteMine: {
             factory: () => roleMiner.maxFactory(
                 Game.spawns['Spawn1'],
                 roomToLeft.sourceId,
@@ -148,15 +160,13 @@ module.exports = {
                 7)
         },
         Miner1: {
-            rolename: roleMiner.role,
             factory: () => roleMiner.maxFactory(
                 Game.spawns['Spawn1'],
                 source1Id,
-                [new RoomPosition(8, 23, module.exports.roomName)],
+                [new RoomPosition(9, 23, module.exports.roomName)],
                 'Miner1')
         },
         Miner2: {
-            rolename: roleMiner.role,
             factory: () => roleMiner.maxFactory(
                 Game.spawns['Spawn1'],
                 source2Id,
@@ -164,7 +174,6 @@ module.exports = {
                 'Miner2')
         },
         UpgraderAt1: {
-            rolename: roleUpgraderAt.role,
             factory: () => {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
@@ -178,13 +187,12 @@ module.exports = {
             }
         },
         UpgraderAt3: {
-            rolename: roleUpgraderAt.role,
             factory: () => {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn1'],
-                    6, 3,
-                    containerAboveRightOfRoomControlerId, //ContainerId
+                    7, 3,
+                    containerAboveRightOfRoomControlerId,
                     roomControllerId,
                     [new RoomPosition(21, 25, 'E26S63')],
                     'UpgraderAt3',
@@ -192,8 +200,21 @@ module.exports = {
             }
         },
 
+        UpgraderAt4: {
+            factory: () => {
+                roleUpgraderAt.factory(
+                    roleUpgraderAt.role,
+                    Game.spawns['Spawn1'],
+                    4, 3,
+                    containerAboveLeftOfRoomControlerId,
+                    roomControllerId,
+                    [new RoomPosition(16, 24, 'E26S63')],
+                    'UpgraderAt4',
+                    16);
+            }
+        },
+
         Source2ContainerToUpgradeContainer: {
-            rolename: roleContainerToContainer.role,
             factory: () => {
                 roleContainerToContainer.factory(
                     Game.spawns['Spawn1'],
@@ -207,15 +228,28 @@ module.exports = {
             }
         },
 
+        Source1ContainerToUpgradeContainer: {
+            factory: () => {
+                roleContainerToContainer.factory(
+                    Game.spawns['Spawn1'],
+                    new RoomPosition(9,23,'E26S63'),
+                    containerAtSource1Id,
+                    new RoomPosition(16,25,'E26S63'),
+                    containerAboveLeftOfRoomControlerId,
+                    [CARRY, CARRY, MOVE, MOVE],
+                    "Source1ContainerToUpgradeContainer"
+                );
+            }
+        },
 
         EnergyLoader: {
-            rolename: 'harvester3',
             factory: () => {
                 const name = 'EnergyLoader-' + Game.time;
-                const spawn = Game.spawns['Spawn2'];
+                const spawn = Game.spawns['Spawn1'];
                 const memory = {
-                    role: 'harvester3',
+                    role: roleEnergyLoader.role,
                     containerLevel: 400,
+                    containerId: containerAtSource1Id,
                     spawnRoom: spawn.room.name,
                     taskName: 'EnergyLoader'
                 };
@@ -236,10 +270,14 @@ module.exports = {
 
     desiredCreepers: {
         distribution: [
-            {role: 'Harvester', cnt: 3, criteria: () => Game.rooms[roomName].energyAvailable < 1400}
-            , {role: 'Upgrader', cnt: 2, criteria: always}
-      //      , {role: 'Miner1', cnt: 1, criteria: () => true}
+              {role: 'Harvester', cnt: 2, criteria: () => Game.rooms[roomName].energyAvailable < 500}
+      //      , {role: 'Upgrader', cnt: 2, criteria: always}
+            , {role: 'EnergyLoader', cnt: 1, criteria: () => true}
+            , {role: 'Miner1', cnt: 1, criteria: () => true}
             , {role: 'Miner2', cnt: 1, criteria: () => true}
+
+
+
             , {role: 'Repairer', cnt: 0, criteria: () => false}
          //   , {role: 'Harvester2', cnt: 2, criteria: () => Game.rooms[roomName].energyAvailable < 1000}
             , {role: 'Towercharger', cnt: 1, criteria: () => getTower().energy < 830}
@@ -250,6 +288,8 @@ module.exports = {
             , {role: 'UpgraderAt1', cnt: 1, criteria: () => true }
             , {role: 'UpgraderAt3', cnt: 1, criteria: () => true }
             , {role: 'Source2ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
+            , {role: 'Source1ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
+            , {role: 'UpgraderAt4', cnt: 1, criteria: () => true }
 
             , {role: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
             //    ,{role: 'Claimer', cnt: 2, criteria: always }

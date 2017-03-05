@@ -4,8 +4,6 @@ var roleEnergyLoader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-
-
         if(creep.memory.unloading && creep.carry.energy == 0) {
          //   console.log('apa3');
             creep.memory.unloading = false;
@@ -55,11 +53,9 @@ var roleEnergyLoader = {
                 creep.moveTo(dest);
             }
         } else {
-//            var sources = creep.room.find(FIND_SOURCES);
             const source = Game.getObjectById(creep.memory.containerId);
             const res = creep.withdraw(source, RESOURCE_ENERGY);
             if (res== ERR_NOT_IN_RANGE) {
-    //            console.log("banan");
                 creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             } else {
   //              console.log("qq:" + res)
