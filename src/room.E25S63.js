@@ -20,7 +20,7 @@ module.exports = {
 
     sourceId: '57ef9df386f108ae6e60e8d7',
 
-    roleDefs: {
+    taskDefs: {
         EnergyLoader: {
             factory: () => {
                 const name = 'EnergyLoader-' + Game.time;
@@ -74,19 +74,6 @@ module.exports = {
                     16);
             }
         },
-        UpgraderAt3: {
-            factory: () => {
-                roleUpgraderAt.factory(
-                    roleUpgraderAt.role,
-                    Game.spawns['Spawn2'],
-                    2, 2,
-                    containerAtRoomController, //ContainerId
-                    '57ef9df386f108ae6e60e8d6',
-                    [new RoomPosition(37, 29, 'E25S63')],
-                    'UpgraderAt3',
-                    16);
-            }
-        },
         SourceContainerToUpgradeContainer: {
             factory: () => {
                 roleContainerToContainer.factory(
@@ -103,12 +90,11 @@ module.exports = {
     },
     desiredCreepers: {
         distribution: [
-            {role: 'Miner', cnt: 1, criteria: () => true},
-            {role: 'EnergyLoader', cnt: 1, criteria: () => true},
-            {role: 'UpgraderAt1', cnt: 1, criteria: () => true},
-            {role: 'UpgraderAt2', cnt: 1, criteria: () => true},
-        //    {role: 'UpgraderAt3', cnt: 1, criteria: () => true},
-            {role: 'SourceContainerToUpgradeContainer', cnt: 2, criteria: () => true}
+            {task: 'Miner', cnt: 1, criteria: () => true},
+            {task: 'EnergyLoader', cnt: 1, criteria: () => true},
+            {task: 'UpgraderAt1', cnt: 1, criteria: () => true},
+            {task: 'UpgraderAt2', cnt: 1, criteria: () => true},
+            {task: 'SourceContainerToUpgradeContainer', cnt: 2, criteria: () => true}
         ]
     },
 

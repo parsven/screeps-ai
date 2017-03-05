@@ -20,12 +20,10 @@ const _ = require('lodash');
 
 
 
-// TODO: Taskname i roledefs, skicka som en parameter till factory istället för att hårdkoda.
+// TODO: Taskname i taskDefs, skicka som en parameter till factory istället för att hårdkoda.
 
 
-// TODO: rename roleDefs to taskDefs
 
-//todo: rename role: to task:
 
 //todo: remove harvester3 reference in main dispatcher.
 //todo: rename Source2ContainerToUpgradeContainer to Source2Container_To_UpgradeContainer
@@ -60,17 +58,17 @@ const spawnLogic = function(spawnRoom, spawn) {
 
     for( let i in spawnRoom.desiredCreepers.distribution ) {
         const r = spawnRoom.desiredCreepers.distribution[i];
-        const role = spawnRoom.roleDefs[r.role];
+        const role = spawnRoom.taskDefs[r.task];
         if(role === undefined) {
-            console.log("role:" + r.role + " is undefined!");
+            console.log("role:" + r.task + " is undefined!");
         }
 
-        const currentCnt = cntCreepsOfType(r.role, spawn.room.name);
-        const line = "[" + currentCnt + "/" + r.cnt + "] " + r.role;
+        const currentCnt = cntCreepsOfType(r.task, spawn.room.name);
+        const line = "[" + currentCnt + "/" + r.cnt + "] " + r.task;
         if(r.criteria()) {
             str = str + "  " + line +"\n";
             if(!spawnCandidate && currentCnt < r.cnt) {
-                spawnCandidate = r.role;
+                spawnCandidate = r.task;
             }
         } else {
             str = str + "( " + line +" )\n";
@@ -83,7 +81,7 @@ const spawnLogic = function(spawnRoom, spawn) {
 
     if(spawnCandidate) {
         str = str + "Next to spawn is: " + spawnCandidate + "\n";
-        const factory = spawnRoom.roleDefs[spawnCandidate].factory;
+        const factory = spawnRoom.taskDefs[spawnCandidate].factory;
         factory();
     } else {
         str = str + "Nothing new to spawn!\n"

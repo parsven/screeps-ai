@@ -77,7 +77,7 @@ module.exports = {
 
     roomName : roomName,
 
-    roleDefs: {
+    taskDefs: {
         Harvester: {  factory: makeHarvester },
         Upgrader: {
             factory: () => roleUpgrader.factory(
@@ -171,7 +171,7 @@ module.exports = {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn1'],
-                    4, 3,
+                    3, 2,
                     containerAboveLeftOfRoomControlerId,
                     roomControllerId,
                     [new RoomPosition(16, 24, 'E26S63')],
@@ -236,29 +236,26 @@ module.exports = {
 
     desiredCreepers: {
         distribution: [
-              {role: 'Harvester', cnt: 2, criteria: () => Game.rooms[roomName].energyAvailable < 500}
-      //      , {role: 'Upgrader', cnt: 2, criteria: always}
-            , {role: 'EnergyLoader', cnt: 1, criteria: () => true}
-            , {role: 'Miner1', cnt: 1, criteria: () => true}
-            , {role: 'Miner2', cnt: 1, criteria: () => true}
+              {task: 'Harvester', cnt: 1, criteria: () => Game.rooms[roomName].energyAvailable < 400}
+      //      , {task: 'Upgrader', cnt: 2, criteria: always}
+            , {task: 'EnergyLoader', cnt: 1, criteria: () => true}
+            , {task: 'Miner1', cnt: 1, criteria: () => true}
+            , {task: 'Miner2', cnt: 1, criteria: () => true}
+            , {task: 'Repairer', cnt: 0, criteria: () => false}
+            , {task: 'Towercharger', cnt: 1, criteria: () => getTower().energy < 830}
+            , {task: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
 
+            , {task: 'UpgraderAt1', cnt: 1, criteria: () => true }
+            , {task: 'UpgraderAt3', cnt: 1, criteria: () => true }
+            , {task: 'Source2ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
+            , {task: 'Source1ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
+            , {task: 'UpgraderAt4', cnt: 1, criteria: () => true }
 
-
-            , {role: 'Repairer', cnt: 0, criteria: () => false}
-            , {role: 'Towercharger', cnt: 1, criteria: () => getTower().energy < 830}
-            , {role: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
-
-            , {role: 'UpgraderAt1', cnt: 1, criteria: () => true }
-            , {role: 'UpgraderAt3', cnt: 1, criteria: () => true }
-            , {role: 'Source2ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
-            , {role: 'Source1ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
-            , {role: 'UpgraderAt4', cnt: 1, criteria: () => true }
-
-            , {role: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
-            , {role: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
+            , {task: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
+            , {task: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
 
         ],
-        fallback: {role: 'SmallHarvester', max: 2, always}
+        fallback: {task: 'SmallHarvester', max: 2, always}
     },
 
 
