@@ -25,7 +25,6 @@ const _ = require('lodash');
 
 
 
-//todo: remove harvester3 reference in main dispatcher.
 //todo: rename Source2ContainerToUpgradeContainer to Source2Container_To_UpgradeContainer
 
 // Todo: om en invasion innehåller två creeps, varav en healer, måste de två tornen skjuta på varsitt mål!

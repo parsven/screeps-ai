@@ -171,7 +171,7 @@ module.exports = {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn1'],
-                    3, 2,
+                    5, 3,
                     containerAboveLeftOfRoomControlerId,
                     roomControllerId,
                     [new RoomPosition(16, 24, 'E26S63')],
