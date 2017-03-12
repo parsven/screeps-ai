@@ -31,8 +31,17 @@ const roleUpgrader = {
         }
 
         if(creep.memory.upgrading) {
-            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.flags['Dest1'], {visualizePathStyle: {stroke: '#ffffff'}});
+            const brokenStructures = creep.pos.findInRange(FIND_STRUCTURES, 3,
+                {filter: (t) =>
+                    (t.structureType == STRUCTURE_ROAD || t.structureType == STRUCTURE_CONTAINER)
+                    && t.hits < t.hitsMax
+                });
+            if(brokenStructures.length > 0) {
+                creep.repair(brokenStructures[0]);
+            } else {
+                if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(Game.flags['Flag18'], {visualizePathStyle: {stroke: '#ffffff'}});
+                }
             }
         }
         else {
