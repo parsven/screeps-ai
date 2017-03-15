@@ -21,12 +21,14 @@ const roleBuilder = require('./role.builder');
 const roleRemoteClaim = require('./role.remoteClaim');
 const roleAttackStructure = require('./role.attackStructure');
 const roleUpgrader = require('./role.upgrader');
+const roleUpgraderAt = require('./role.upgradeAt');
 
 const roleHarvester2 = require('./role.harvester2');
 const roleMiner2 = require('./role.miner2');
 const roleEnergyLoader = require('./role.energyLoader');
 
 const roleWallBuilder = require('./role.wallbuilder');
+const roleContainerToContainer = require('./role.containerToContainer');
 
 
 const constructionSitesE29S63 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
@@ -38,6 +40,11 @@ const sourceUp = '57ef9dff86f108ae6e60ea0c';
 const sourceDown = '57ef9dff86f108ae6e60ea0d';
 
 const containerAtEnergySources = '58c57bb1fb47bdd51ad9cee4';
+const posOfContainerAtEnergySources = new RoomPosition(44,45, 'E29S63');
+
+const containerAtRoomController = '58c85fde1e264c583f4d254c';
+const posOfContainerAtRoomController = new RoomPosition(27,30, 'E29S63');
+
 
 const build = function(typ, body, taskName) {
     const name = taskName + '-' + Game.time;
@@ -121,6 +128,36 @@ module.exports = {
                     sourceDown, [new RoomPosition(45, 45, 'E29S63')], 'Miner2');
             }
         },
+        UpgraderAt1: {
+            factory: () => {
+                roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
+                    2,2,
+                    containerAtRoomController,
+                    '57ef9dff86f108ae6e60ea0b',
+                    [new RoomPosition(28,30, 'E29S63')],
+                    'UpgraderAt1');
+            }
+        },
+        UpgraderAt2: {
+            factory: () => {
+                roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
+                    2,2,
+                    containerAtRoomController,
+                    '57ef9dff86f108ae6e60ea0b',
+                    [new RoomPosition(28,29, 'E29S63')],
+                    'UpgraderAt2');
+            }
+        },
+        UpgraderAt3: {
+            factory: () => {
+                roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
+                    2,2,
+                    containerAtRoomController,
+                    '57ef9dff86f108ae6e60ea0b',
+                    [new RoomPosition(27,29, 'E29S63')],
+                    'UpgraderAt3');
+            }
+        },
         EnergyLoader: {
             factory: () => {
                 const name = 'EnergyLoader-' + Game.time;
@@ -140,6 +177,14 @@ module.exports = {
                     //  console.log('fail' + body + name);
                 }
             }
+        },
+        Container2Container: {
+            factory: () => {
+                roleContainerToContainer.factory(Game.spawns['Spawn3'],
+                    posOfContainerAtEnergySources, containerAtEnergySources,
+                    posOfContainerAtRoomController, containerAtRoomController,
+                [MOVE, MOVE, CARRY, CARRY], 'Container2Container');
+            }
         }
     },
 
@@ -149,8 +194,12 @@ module.exports = {
             {task: 'EnergyLoader', cnt: 1, criteria: () => true},
             {task: 'Miner1', cnt: 1, criteria: () => true},
             {task: 'Miner2', cnt: 1, criteria: () => true},
-            {task: 'Upgrader', cnt: 3, criteria: () => true},
-            {task: 'WallBuilder', cnt: 1, criteria: () => true },
+            {task: 'Container2Container', cnt: 3, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] < 1400},
+//            {task: 'Upgrader', cnt: 3, criteria: () => true},
+            {task: 'UpgraderAt1', cnt: 1, criteria: () => true},
+            {task: 'UpgraderAt2', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 500},
+            {task: 'UpgraderAt3', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1000},
+//            {task: 'WallBuilder', cnt: 1, criteria: () => true },
             {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 }
         ]
     },

@@ -20,6 +20,7 @@ const roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        if(creep.spawning) { return;}
 
         if(creep.memory.upgrading && creep.carry.energy == 0) {
             creep.memory.upgrading = false;
