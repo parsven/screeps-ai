@@ -1,9 +1,9 @@
 const _ = require('lodash');
 
 
-const roleBuilder = {
+const roleWallBuilder = {
 
-    role: 'builder',
+    role: 'wallbuilder',
 
     factory: function (spawn, body, sourceId, harvestFlagName, taskName) {
         const name = taskName + '-' + Game.time;
@@ -31,23 +31,27 @@ const roleBuilder = {
         if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
             creep.memory.building = true;
             creep.say('🚧 build');
+
+            const walls = creep.room.find(FIND_STRUCTURES,
+                {filter: (t) =>
+                    (t.structureType == STRUCTURE_WALL)
+                });
+            console.log("walls.length = "+ walls.length);
+            walls.sort((a, b) => a.hits/a.hitsMax - b.hits/b.hitsMax);
+            console.log("walls.length = "+ walls.length);
+
+            creep.memory.targetWall = walls[0].id;
         }
 
         if(creep.memory.building) {
-            let targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-            if(targets.length) {
-                targets = _.sortBy(targets, ['structureType']);
-                if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-
-                    const reuserFactor = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
-                    creep.moveTo(targets[0], {reusePath: reuserFactor, visualizePathStyle: {stroke: '#ffffff'}});
-                }
-            } else {
-                var dest = Game.flags['Fallback'];
-                creep.moveTo(dest);
-            }        
+            const target = Game.getObjectById(creep.memory.targetWall);
+            if(creep.repair(target) == ERR_NOT_IN_RANGE) {
+                const reuserFactor = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+                creep.moveTo(target, {reusePath: reuserFactor, visualizePathStyle: {stroke: '#ffffff'}});
+            }
         } else {
-            source = Game.getObjectById(creep.memory.sourceId);
+
+            const source = Game.getObjectById(creep.memory.sourceId);
             let res;
             if (source.structureType) {
                 res = creep.withdraw(source, RESOURCE_ENERGY);
@@ -56,11 +60,12 @@ const roleBuilder = {
             }
             if(res == ERR_NOT_IN_RANGE) {
                 const flag = Game.flags[creep.memory.harvestFlagName];
-                res = creep.moveTo(flag, {visualizePathStyle: {stroke: '#ffaa00'}});
-          //      console.out("res=" + res);
+                const reuserFactor = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+                res = creep.moveTo(flag, {reusePath: reuserFactor, visualizePathStyle: {stroke: '#ffaa00'}});
+                //      console.out("res=" + res);
             }
         }
     }
 };
 
-module.exports = roleBuilder;
+module.exports = roleWallBuilder;

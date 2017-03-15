@@ -7,10 +7,13 @@ const roleClaimer = require('./role.claimer');
 const roleContainerToContainer = require('./role.containerToContainer');
 const roleEnergyLoader = require('./role.energyLoader');
 const roleUpgraderAt = require('./role.upgradeAt');
+const roleMiner2 = require('./role.miner2');
+
+const roomE29S63 = require('./room.E29S63');
 
 const towerLogic = require('./tower');
 
-
+const _ = require('lodash');
 const util = require('util');
 
 
@@ -58,6 +61,9 @@ const source2Id = '57ef9df686f108ae6e60e933';
 const tower1Id = '58a84e66120c7b1c6451f132';
 const tower2Id = '58aed3482be237616065a48d';
 
+const mineralSource = '57efa013195b160f02c75410';
+const mineralContainer = '58c822d7d5bd3447678b981e';
+
 const getTower = () => Game.getObjectById(tower1Id);
 const getTower2 = () => Game.getObjectById(tower2Id);
 
@@ -69,6 +75,9 @@ const constructionSitesE25S63 = () => Object.keys(Game.constructionSites).filter
     return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E25S63';
 });
 
+const constructionSitesE29S63 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
+    return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E29S63';
+});
 const always = function() {return true};
 
 const roomName = 'E26S63';
@@ -138,6 +147,12 @@ module.exports = {
                 source2Id,
                 [new RoomPosition(28, 23, module.exports.roomName)],
                 'Miner2')
+        },
+        MinerMineral: {
+            factory: () => {
+                roleMiner2.factory(Game.spawns['Spawn1'], [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK],
+                    mineralSource, [Game.getObjectById(mineralContainer).pos], 'MinerMineral');
+            }
         },
         UpgraderAt1: {
             factory: () => {
@@ -229,6 +244,16 @@ module.exports = {
             }
         },
 
+        Builder1: {
+            factory: () => {
+                roomE29S63.makeBuilder1();
+            }
+        },
+        Builder2: {
+            factory: () => {
+                roomE29S63.makeBuilder2();
+            }
+        },
 
         SmallHarvester: { rolename: 'harvester', factory: makeSmallHarvester }
 
@@ -236,7 +261,7 @@ module.exports = {
 
     desiredCreepers: {
         distribution: [
-              {task: 'Harvester', cnt: 1, criteria: () => Game.rooms[roomName].energyAvailable < 400}
+              {task: 'Harvester', cnt: 1, criteria: () => Game.rooms[roomName].energyAvailable < 800}
       //      , {task: 'Upgrader', cnt: 2, criteria: always}
             , {task: 'EnergyLoader', cnt: 1, criteria: () => true}
             , {task: 'Miner1', cnt: 1, criteria: () => true}
@@ -251,8 +276,13 @@ module.exports = {
             , {task: 'Source1ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
             , {task: 'UpgraderAt4', cnt: 1, criteria: () => true }
 
+      //      , {task: 'Builder1', cnt: 1, criteria: () => constructionSitesE29S63().length > 0}
+      //      , {task: 'Builder2', cnt: 1, criteria: () => constructionSitesE29S63().length > 0}
+
             , {task: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
             , {task: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
+            , {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
+                && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
 
         ],
         fallback: {task: 'SmallHarvester', max: 2, always}

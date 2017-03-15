@@ -8,11 +8,19 @@ const roleTowercharger = require('./role.towercharger');
 const roleRemoteRepairAndBuilder = require('./role.remoteRepairAndBuild');
 const roleClaimer = require('./role.claimer');
 const roleMiner = require('./role.miner');
+const roleMiner2 = require('./role.miner2');
 const roleUpgradeAt = require('./role.upgradeAt');
 const roleContainerToContainer = require('./role.containerToContainer');
+const roleAttackStructure = require('./role.attackStructure');
+const roleRemoteClaim = require('./role.remoteClaim');
+const roleMineralhauler = require('./role.mineralhauler');
+
+const roleHarvester2 = require('./role.harvester2');
+const roleWallbuilder = require('./role.wallbuilder');
 
 const roomE26S63 = require('./room.E26S63');
 const roomE25S63 = require('./room.E25S63');
+const roomE29S63 = require('./room.E29S63');
 
 const util = require('./util');
 
@@ -119,6 +127,16 @@ module.exports.loop = function () {
         }
     }
 
+    if(Game.time % 10 === 1 && Game.spawns['Spawn3'].spawning === null)
+    {
+        let logStr = "======== E29S63 =================\n"
+            + spawnLogic(roomE29S63, Game.spawns['Spawn3']);
+        console.log(logStr);
+        if(cntCreepsOfType('harvester') == 0) {
+            //          makeSmallHarvester();
+        }
+    }
+
     roomE26S63.towerRun();
     roomE25S63.towerRun();
 
@@ -164,6 +182,24 @@ module.exports.loop = function () {
         }
         if(creep.memory.role == roleContainerToContainer.role) {
             roleContainerToContainer.run(creep);
+        }
+        if(creep.memory.role == roleAttackStructure.role) {
+            roleAttackStructure.run(creep);
+        }
+        if(creep.memory.role == roleRemoteClaim.role) {
+            roleRemoteClaim.run(creep);
+        }
+        if(creep.memory.role == roleHarvester2.role) {
+            roleHarvester2.run(creep);
+        }
+        if(creep.memory.role == roleWallbuilder.role) {
+            roleWallbuilder.run(creep);
+        }
+        if(creep.memory.role == roleMiner2.role) {
+            roleMiner2.run(creep);
+        }
+        if(creep.memory.role == roleMineralhauler.role) {
+            roleMineralhauler.run(creep);
         }
     }
 };

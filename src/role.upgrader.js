@@ -47,7 +47,7 @@ const roleUpgrader = {
         else {
             const source = Game.getObjectById(creep.memory.sourceId);
             let res;
-            if (source.resourceType) {
+            if (source.structureType) {
                 res = creep.withdraw(source, RESOURCE_ENERGY);
             } else {
                 res = creep.harvest(source);
@@ -61,7 +61,9 @@ const roleUpgrader = {
                     } else {
                         pos = source;
                     }
-                    creep.moveTo(pos, {visualizePathStyle: {stroke: '#ffaa00'}});
+                    creep.moveTo(pos, {reusePath: 1,visualizePathStyle: {stroke: '#ffaa00'}});
+                } else {
+                    console.log("Failure, res=" + res);
                 }
             }
         }

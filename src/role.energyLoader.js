@@ -1,3 +1,6 @@
+
+const roleMineralHauler = require('./role.mineralhauler');
+
 var roleEnergyLoader = {
 
     role: 'energyLoader',
@@ -49,8 +52,14 @@ var roleEnergyLoader = {
                     creep.moveTo(target, {reusePath: reuserFactor, visualizePathStyle: {stroke: '#ffffff'}});
                 }
             } else {
-                var dest = Game.flags['Fallback2'];
-                creep.moveTo(dest);
+
+                if(roleMineralHauler.mineralContainerInRoom) {
+                    creep.memory.role = roleMineralHauler.role;
+                    creep.memory.oldRole = this.role;
+                } else {
+                    var dest = Game.flags['Fallback2'];
+                    creep.moveTo(dest);
+                }
             }
         } else {
             const source = Game.getObjectById(creep.memory.containerId);
