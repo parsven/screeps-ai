@@ -41,7 +41,7 @@ const roleUpgrader = {
                 creep.repair(brokenStructures[0]);
             } else {
                 if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(Game.flags['Flag18'], {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(Game.flags['Flag18'], {reusePath: 1, visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
@@ -62,7 +62,7 @@ const roleUpgrader = {
                     } else {
                         pos = source;
                     }
-                    creep.moveTo(pos, {reusePath: 1,visualizePathStyle: {stroke: '#ffaa00'}});
+                    creep.moveTo(pos, {reusePath: 2,visualizePathStyle: {stroke: '#ffaa00'}});
                 } else {
                     console.log("Failure, res=" + res);
                 }

@@ -29,6 +29,8 @@ const roleEnergyLoader = require('./role.energyLoader');
 
 const roleWallBuilder = require('./role.wallbuilder');
 const roleContainerToContainer = require('./role.containerToContainer');
+const role2StationaryTowerCharger = require('./role2.stationaryTowerCharger');
+const towerLogic = require('./tower');
 
 
 const constructionSitesE29S63 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
@@ -39,11 +41,16 @@ const constructionSitesE29S63 = () => Object.keys(Game.constructionSites).filter
 const sourceUp = '57ef9dff86f108ae6e60ea0c';
 const sourceDown = '57ef9dff86f108ae6e60ea0d';
 
-const containerAtEnergySources = '58c57bb1fb47bdd51ad9cee4';
-const posOfContainerAtEnergySources = new RoomPosition(44,45, 'E29S63');
+const storageId = '58cdafcc6fbc772560f2ba16';
 
-const containerAtRoomController = '58c85fde1e264c583f4d254c';
+const containerAtEnergySources = '58cc62e4833a2fe46d57d1a8';
+const posOfContainerAtEnergySources = new RoomPosition(44,45, 'E29S63');
+const posOfStorage = new RoomPosition(37,42, 'E29S63');
+
+const containerAtRoomController = '58cc51e312a03d29648a358c';
 const posOfContainerAtRoomController = new RoomPosition(27,30, 'E29S63');
+
+const tower1Id = '58ca9ce9ad9fc25a25eb80e8';
 
 
 const build = function(typ, body, taskName) {
@@ -98,109 +105,121 @@ module.exports = {
         Upgrader: {
             factory: () => {
                 roleUpgrader.factory(Game.spawns['Spawn3'], [MOVE, MOVE, WORK, WORK, WORK, CARRY],
-                    containerAtEnergySources, "Upgrader", Game.flags['hv2'].pos);
+                    '57ef9dff86f108ae6e60ea0c', "Upgrader", Game.flags['hv2'].pos);
             }
         },
 
         WallBuilder: {
             factory: () => {
                 roleWallBuilder.factory(Game.spawns['Spawn3'], [MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY],
-                    containerAtEnergySources, 'aaaTTT', 'WallBuilder');
+                    storageId, 'aaaTTT', 'WallBuilder');
             }
         },
 
         Builder: {
             factory: () => {
-                roleBuilder.factory(Game.spawns['Spawn3'], [MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY],
-                    containerAtEnergySources, 'aaaTTT', 'Builder');
+                roleBuilder.factory(Game.spawns['Spawn3'], [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY],
+                    storageId, 'aaaTTT', 'Builder');
             }
         },
 
         Miner1: {
             factory: () => {
-                roleMiner2.factory(Game.spawns['Spawn3'], [MOVE, MOVE, WORK, WORK, WORK, CARRY],
+                roleMiner2.factory(Game.spawns['Spawn3'], [MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],
                     sourceUp, [new RoomPosition(44, 44, 'E29S63')], 'Miner1');
             }
         },
         Miner2: {
             factory: () => {
-                roleMiner2.factory(Game.spawns['Spawn3'], [MOVE, MOVE, WORK, WORK, WORK, CARRY],
+                roleMiner2.factory(Game.spawns['Spawn3'], [MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],
                     sourceDown, [new RoomPosition(45, 45, 'E29S63')], 'Miner2');
             }
         },
         UpgraderAt1: {
             factory: () => {
-                roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
-                    2,2,
+                const name = roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
+                    4,2,
                     containerAtRoomController,
                     '57ef9dff86f108ae6e60ea0b',
                     [new RoomPosition(28,30, 'E29S63')],
                     'UpgraderAt1');
+                if(name) {
+                    Memory.creeps[name].role2 = role2StationaryTowerCharger.role2;
+                }
             }
         },
         UpgraderAt2: {
             factory: () => {
-                roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
-                    2,2,
+                const name = roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
+                    5,3,
                     containerAtRoomController,
                     '57ef9dff86f108ae6e60ea0b',
                     [new RoomPosition(28,29, 'E29S63')],
                     'UpgraderAt2');
+                if(name) {
+                    Memory.creeps[name].role2 = role2StationaryTowerCharger.role2;
+                }
             }
         },
         UpgraderAt3: {
             factory: () => {
-                roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
-                    2,2,
+                const name = roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
+                    5,3,
                     containerAtRoomController,
                     '57ef9dff86f108ae6e60ea0b',
                     [new RoomPosition(27,29, 'E29S63')],
                     'UpgraderAt3');
+                if(name) {
+                    Memory.creeps[name].role2 = role2StationaryTowerCharger.role2;
+                }
             }
         },
         EnergyLoader: {
             factory: () => {
-                const name = 'EnergyLoader-' + Game.time;
-                const spawn = Game.spawns['Spawn3'];
-                const memory = {
-                    role: roleEnergyLoader.role,
-                    containerLevel: 100,
-                    containerId: containerAtEnergySources,
-                    spawnRoom: spawn.room.name,
-                    taskName: 'EnergyLoader'
-                };
-                const body = [CARRY, CARRY, MOVE, MOVE];
-                if (OK == spawn.canCreateCreep(body, name)) {
-                    const result = spawn.createCreep(body, name, memory);
-                    console.log('making EnergyLoader res=' + result);
-                } else {
-                    //  console.log('fail' + body + name);
-                }
+            roleEnergyLoader.factory(Game.spawns['Spawn3'],
+                [CARRY, CARRY, CARRY,MOVE, MOVE, MOVE],
+                storageId,
+                new RoomPosition(44,45, 'E29S63'),
+                'EnergyLoader')
             }
         },
         Container2Container: {
             factory: () => {
                 roleContainerToContainer.factory(Game.spawns['Spawn3'],
-                    posOfContainerAtEnergySources, containerAtEnergySources,
+                    posOfStorage, storageId,
                     posOfContainerAtRoomController, containerAtRoomController,
-                [MOVE, MOVE, CARRY, CARRY], 'Container2Container');
+                    [MOVE,MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY],
+                    'Container2Container');
+            }
+        },
+        SourceContainerToStorage: {
+            factory: () => {
+                roleContainerToContainer.factory(Game.spawns['Spawn3'],
+                    posOfContainerAtEnergySources,
+                    containerAtEnergySources,
+                    posOfStorage,
+                    storageId,
+                    [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
+                    'SourceContainerToStorage'
+                )
             }
         }
     },
 
     desiredCreepers: {
         distribution: [
-            {task: 'Harvester', cnt: 1, criteria: () => Game.rooms['E29S63'].find(FIND_CREEPS).length < 2},
+            {task: 'Harvester', cnt: 2, criteria: () =>  Game.rooms['E29S63'].find(FIND_CREEPS).length < 2},
             {task: 'EnergyLoader', cnt: 1, criteria: () => true},
             {task: 'Miner1', cnt: 1, criteria: () => true},
             {task: 'Miner2', cnt: 1, criteria: () => true},
-            {task: 'Container2Container', cnt: 3, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] < 1400},
-//            {task: 'Upgrader', cnt: 3, criteria: () => true},
+            {task: 'Container2Container', cnt: 4, criteria: () => true }, //Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] < 1800},
+     //       {task: 'Upgrader', cnt: 1, criteria: () => true},
+            {task: 'SourceContainerToStorage', cnt:2, criteria: () => true},
             {task: 'UpgraderAt1', cnt: 1, criteria: () => true},
-            {task: 'UpgraderAt2', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 500},
-            {task: 'UpgraderAt3', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1000},
-//            {task: 'WallBuilder', cnt: 1, criteria: () => true },
-            {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 }
+            {task: 'UpgraderAt2', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1000},
+            {task: 'UpgraderAt3', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1800},
+       //     {task: 'WallBuilder', cnt: 2, criteria: () => true },
+        //    {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 }
         ]
     },
 
@@ -214,6 +233,25 @@ module.exports = {
     makeUpgrader: () => {
         roleBuilder.factory(Game.spawns['Spawn1'], [WORK, CARRY, MOVE],
             '57ef9dff86f108ae6e60ea0c','hv2', "Upgrader");
+    },
+
+
+
+    towerRun: () => {
+        const tower = Game.getObjectById(tower1Id);
+        if (tower) {
+            if (!towerLogic.towerAttack(tower) && Game.time % 2 == 0) {
+                towerLogic.towerRepair(tower);
+            }
+        } else {
+            console.log('No tower in this rooom!');
+        }
+
+
+
     }
+
+
+
 
 };

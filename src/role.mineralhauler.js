@@ -65,6 +65,9 @@ const roleMineralHauler = {
                     } else {
                         console.log("assertion failure!");
                     }
+                } else if(res == ERR_INVALID_TARGET) {
+                    m.role = m.oldRole;
+                    m.mineralHaulerState = null;
                 } else {
                     console.log("Promblem2:" + res);
                 }

@@ -8,6 +8,7 @@ const roleContainerToContainer = require('./role.containerToContainer');
 const roleEnergyLoader = require('./role.energyLoader');
 const roleUpgraderAt = require('./role.upgradeAt');
 const roleMiner2 = require('./role.miner2');
+const roleWallBuilder = require('./role.wallbuilder');
 
 const roomE29S63 = require('./room.E29S63');
 
@@ -60,12 +61,16 @@ const source2Id = '57ef9df686f108ae6e60e933';
 
 const tower1Id = '58a84e66120c7b1c6451f132';
 const tower2Id = '58aed3482be237616065a48d';
+const tower3Id = '58cc57cbbc6350140a1811f0';
+
+const storageId = '58af4af675cde625e5e03868';
 
 const mineralSource = '57efa013195b160f02c75410';
 const mineralContainer = '58c822d7d5bd3447678b981e';
 
 const getTower = () => Game.getObjectById(tower1Id);
 const getTower2 = () => Game.getObjectById(tower2Id);
+const getTower3 = () => Game.getObjectById(tower3Id);
 
 const constructionSitesE26S63 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
     return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E26S63';
@@ -101,8 +106,8 @@ module.exports = {
             factory: () => roleTowercharger.makeWithdrawingTowerCharger(
                 Game.spawns['Spawn1'],
                 [MOVE,MOVE,CARRY,CARRY],
-                containerAtSource1Id,
-                tower1Id,
+                storageId,
+                null,
                 "Towercharger")
         },
         Towercharger2: { factory: () => roleTowercharger.makeWithdrawingTowerCharger(
@@ -186,7 +191,7 @@ module.exports = {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn1'],
-                    5, 3,
+                    4, 3,
                     containerAboveLeftOfRoomControlerId,
                     roomControllerId,
                     [new RoomPosition(16, 24, 'E26S63')],
@@ -209,49 +214,42 @@ module.exports = {
             }
         },
 
-        Source1ContainerToUpgradeContainer: {
+        StorageToUpgradeContainer: {
             factory: () => {
                 roleContainerToContainer.factory(
                     Game.spawns['Spawn1'],
-                    new RoomPosition(9,23,'E26S63'),
-                    containerAtSource1Id,
+                    new RoomPosition(13,23,'E26S63'),
+                    storageId,
                     new RoomPosition(16,25,'E26S63'),
                     containerAboveLeftOfRoomControlerId,
                     [CARRY, CARRY, MOVE, MOVE],
-                    "Source1ContainerToUpgradeContainer"
+                    "StorageToUpgradeContainer"
                 );
             }
         },
 
         EnergyLoader: {
             factory: () => {
-                const name = 'EnergyLoader-' + Game.time;
-                const spawn = Game.spawns['Spawn1'];
-                const memory = {
-                    role: roleEnergyLoader.role,
-                    containerLevel: 400,
-                    containerId: containerAtSource1Id,
-                    spawnRoom: spawn.room.name,
-                    taskName: 'EnergyLoader'
-                };
                 const body = [CARRY, CARRY, MOVE, MOVE];
-                if (OK == spawn.canCreateCreep(body, name)) {
-                    const result = spawn.createCreep(body, name, memory);
-                    console.log('making EnergyLoader res=' + result);
-                } else {
-                    //  console.log('fail' + body + name);
-                }
+                roleEnergyLoader.factory(Game.spawns['Spawn1'],body, storageId, new RoomPosition(12,23,'E26S63'), 'EnergyLoader');
             }
         },
 
-        Builder1: {
+        WallBuilder: {
             factory: () => {
-                roomE29S63.makeBuilder1();
+                roleWallBuilder.factory(Game.spawns['Spawn1'], [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY],
+                    containerAtSource1Id, 'BuildSource', 'WallBuilder');
             }
         },
-        Builder2: {
+        Source1ContainerToStorage: {
             factory: () => {
-                roomE29S63.makeBuilder2();
+               roleContainerToContainer.factory(Game.spawns['Spawn1'],
+                   new RoomPosition(10,22, 'E26S63'),
+                   containerAtSource1Id,
+                   new RoomPosition(12,22, 'E26S63'),
+                   storageId,
+                   [MOVE, MOVE,  CARRY, CARRY, CARRY],
+                   'Source1ContainerToStorage')
             }
         },
 
@@ -267,22 +265,22 @@ module.exports = {
             , {task: 'Miner1', cnt: 1, criteria: () => true}
             , {task: 'Miner2', cnt: 1, criteria: () => true}
             , {task: 'Repairer', cnt: 0, criteria: () => false}
-            , {task: 'Towercharger', cnt: 1, criteria: () => getTower().energy < 830}
-            , {task: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
+            , {task: 'Towercharger', cnt: 1, criteria: () => true}
+     //       , {task: 'Towercharger2', cnt: 1, criteria: () => getTower2().energy < 830}
 
             , {task: 'UpgraderAt1', cnt: 1, criteria: () => true }
             , {task: 'UpgraderAt3', cnt: 1, criteria: () => true }
             , {task: 'Source2ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
-            , {task: 'Source1ContainerToUpgradeContainer', cnt: 1, criteria: () => true }
+            , {task: 'Source1ContainerToStorage', cnt: 1, criteria: () => true }
+            , {task: 'StorageToUpgradeContainer', cnt: 1, criteria: () => true }
             , {task: 'UpgraderAt4', cnt: 1, criteria: () => true }
 
-      //      , {task: 'Builder1', cnt: 1, criteria: () => constructionSitesE29S63().length > 0}
-      //      , {task: 'Builder2', cnt: 1, criteria: () => constructionSitesE29S63().length > 0}
+            , {task: 'WallBuilder', cnt: 1, criteria: () => true }
 
             , {task: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
             , {task: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
-            , {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
-                && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
+          //  , {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
+     //  '77'         && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
 
         ],
         fallback: {task: 'SmallHarvester', max: 2, always}
@@ -292,6 +290,7 @@ module.exports = {
     towerRun: () => {
         const tower = getTower();
         const tower2 = getTower2();
+        const tower3 = getTower2();
 
         if(tower) {
             if(!towerLogic.towerAttack(tower) && Game.time % 2 == 0) {
@@ -306,6 +305,13 @@ module.exports = {
             }
         } else {
             console.log('No tower2 found!');
+        }
+        if(tower3) {
+            if(!towerLogic.towerAttack(tower3) && Game.time % 2 == 1) {
+                towerLogic.towerRepair(tower3);
+            }
+        } else {
+            console.log('No tower3 found!');
         }
 
 

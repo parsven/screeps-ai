@@ -17,6 +17,7 @@ const roleMineralhauler = require('./role.mineralhauler');
 
 const roleHarvester2 = require('./role.harvester2');
 const roleWallbuilder = require('./role.wallbuilder');
+const role2StationaryTowerCharger = require('./role2.stationaryTowerCharger');
 
 const roomE26S63 = require('./room.E26S63');
 const roomE25S63 = require('./room.E25S63');
@@ -139,6 +140,7 @@ module.exports.loop = function () {
 
     roomE26S63.towerRun();
     roomE25S63.towerRun();
+    roomE29S63.towerRun();
 
     for(let name in Game.creeps) {
         const creep = Game.creeps[name];
@@ -147,59 +149,69 @@ module.exports.loop = function () {
             creep.say(creep.memory.taskName);
         }
 
-        if (creep.memory.role == 'harvester') {
-            roleHarvester.run(creep);
-        }
-        if (creep.memory.role == roleEnergyLoader.role) {
-            roleEnergyLoader.run(creep);
-        }
-        if (creep.memory.role == 'harvesterRemote') {
-            roleHarvesterRemote.run(creep);
-        }
-        if (creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
-        }
-        if (creep.memory.role == 'builder') {
-            roleBuilder.run(creep);
-        }
-        if (creep.memory.role == 'repairer') {
-            roleRepairer.run(creep);
-        }
-        if (creep.memory.role == 'towercharger') {
-            roleTowercharger.run(creep);
-        }
-        if (creep.memory.role == 'remoteMineAndBuilder') {
-            roleRemoteRepairAndBuilder.run(creep);
-        }
-        if (creep.memory.role == 'claimer') {
-            roleClaimer.run(creep);
-        }
-        if (creep.memory.role == roleMiner.role) {
-            roleMiner.run(creep);
-        }
-        if (creep.memory.role.substring(0,9) === roleUpgradeAt.role) {
-            roleUpgradeAt.run(creep);
-        }
-        if(creep.memory.role == roleContainerToContainer.role) {
-            roleContainerToContainer.run(creep);
-        }
-        if(creep.memory.role == roleAttackStructure.role) {
-            roleAttackStructure.run(creep);
-        }
-        if(creep.memory.role == roleRemoteClaim.role) {
-            roleRemoteClaim.run(creep);
-        }
-        if(creep.memory.role == roleHarvester2.role) {
-            roleHarvester2.run(creep);
-        }
-        if(creep.memory.role == roleWallbuilder.role) {
-            roleWallbuilder.run(creep);
-        }
-        if(creep.memory.role == roleMiner2.role) {
-            roleMiner2.run(creep);
-        }
-        if(creep.memory.role == roleMineralhauler.role) {
-            roleMineralhauler.run(creep);
+        try {
+            if(creep.memory.role2 == role2StationaryTowerCharger.role2) {
+                if(role2StationaryTowerCharger.run(creep)) {
+                    continue;
+                }
+            }
+
+            if (creep.memory.role == 'harvester') {
+                roleHarvester.run(creep);
+            }
+            if (creep.memory.role == roleEnergyLoader.role) {
+                roleEnergyLoader.run(creep);
+            }
+            if (creep.memory.role == 'harvesterRemote') {
+                roleHarvesterRemote.run(creep);
+            }
+            if (creep.memory.role == 'upgrader') {
+                roleUpgrader.run(creep);
+            }
+            if (creep.memory.role == 'builder') {
+                roleBuilder.run(creep);
+            }
+            if (creep.memory.role == 'repairer') {
+                roleRepairer.run(creep);
+            }
+            if (creep.memory.role == 'towercharger') {
+                roleTowercharger.run(creep);
+            }
+            if (creep.memory.role == 'remoteMineAndBuilder') {
+                roleRemoteRepairAndBuilder.run(creep);
+            }
+            if (creep.memory.role == 'claimer') {
+                roleClaimer.run(creep);
+            }
+            if (creep.memory.role == roleMiner.role) {
+                roleMiner.run(creep);
+            }
+            if (creep.memory.role.substring(0,9) === roleUpgradeAt.role) {
+                roleUpgradeAt.run(creep);
+            }
+            if(creep.memory.role == roleContainerToContainer.role) {
+                roleContainerToContainer.run(creep);
+            }
+            if(creep.memory.role == roleAttackStructure.role) {
+                roleAttackStructure.run(creep);
+            }
+            if(creep.memory.role == roleRemoteClaim.role) {
+                roleRemoteClaim.run(creep);
+            }
+            if(creep.memory.role == roleHarvester2.role) {
+                roleHarvester2.run(creep);
+            }
+            if(creep.memory.role == roleWallbuilder.role) {
+                roleWallbuilder.run(creep);
+            }
+            if(creep.memory.role == roleMiner2.role) {
+                roleMiner2.run(creep);
+            }
+            if(creep.memory.role == roleMineralhauler.role) {
+                roleMineralhauler.run(creep);
+            }
+        } catch (err) {
+            console.log(err + err.stack);
         }
     }
 };

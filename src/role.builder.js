@@ -47,6 +47,12 @@ const roleBuilder = {
                 creep.moveTo(dest);
             }        
         } else {
+            const energyResource = creep.pos.findInRange(FIND_DROPPED_ENERGY, 1)[0];
+            if (energyResource) {
+                if (OK == creep.pickup(energyResource)) {
+                    return;
+                }
+            }
             source = Game.getObjectById(creep.memory.sourceId);
             let res;
             if (source.structureType) {

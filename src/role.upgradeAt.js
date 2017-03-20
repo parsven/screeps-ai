@@ -88,7 +88,7 @@ module.exports = {
                     dest = new RoomPosition(targetPos.x, targetPos.y, targetPos.roomName);
                 }
             }
-            res = creep.moveTo(dest, {visualizePathStyle: {stroke: '#ffffff'}})
+            res = creep.moveTo(dest, {visualizePathStyle: {stroke: '#ffffff'}});
             if(res !== OK) {
                 console.log("res:" + res);
             }

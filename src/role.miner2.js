@@ -36,7 +36,11 @@ module.exports = {
             if(creep.carry.energy > 0 && creep.carry.energy == creep.carryCapacity) {
                 const containers =creep.pos.findInRange(FIND_STRUCTURES,1, {filter: {structureType: STRUCTURE_CONTAINER}});
                 creep.say("Dumping");
-                creep.transfer(containers[0], RESOURCE_ENERGY);
+                if(containers.length > 0) {
+                    creep.transfer(containers[0], RESOURCE_ENERGY);
+                } else {
+                    creep.drop(RESOURCE_ENERGY);
+                }
             } else {
                 creep.harvest(Game.getObjectById(m.sourceId));
             }
@@ -57,7 +61,7 @@ module.exports = {
                     dest = new RoomPosition(targetPos.x, targetPos.y, targetPos.roomName);
                 }
             }
-            res = creep.moveTo(dest, {visualizePathStyle: {stroke: '#ffffff'}});
+            res = creep.moveTo(dest, {reusePath: 0,visualizePathStyle: {stroke: '#ffffff'}});
             if(res !== OK) {
                 console.log("res:" + res);
             }

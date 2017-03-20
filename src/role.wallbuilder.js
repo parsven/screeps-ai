@@ -34,10 +34,10 @@ const roleWallBuilder = {
 
             const walls = creep.room.find(FIND_STRUCTURES,
                 {filter: (t) =>
-                    (t.structureType == STRUCTURE_WALL)
+                    (t.structureType == STRUCTURE_WALL || t.structureType == STRUCTURE_RAMPART)
                 });
             console.log("walls.length = "+ walls.length);
-            walls.sort((a, b) => a.hits/a.hitsMax - b.hits/b.hitsMax);
+            walls.sort((a, b) => a.hits - b.hits);
             console.log("walls.length = "+ walls.length);
 
             creep.memory.targetWall = walls[0].id;

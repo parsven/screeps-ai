@@ -25,7 +25,7 @@ const towerRepair = function(t) {
     } else if(t.energy > 820) {
         const damagedWalls = t.room.find(FIND_STRUCTURES, {
             filter: function (structure) {
-                return structure.hits < 200000 &&
+                return structure.hits < 150000 &&
                     (structure.structureType === STRUCTURE_WALL || structure.structureType === STRUCTURE_RAMPART)
             }
         });
