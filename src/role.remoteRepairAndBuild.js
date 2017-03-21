@@ -44,7 +44,7 @@ const roleBuilder = {
             if (room) {
        //         const sources = room.find(FIND_SOURCES);
       //          source = sources[0];
-                source = Game.getObjectById('58af8d5fdb3b7b23072eed6f');
+                source = Game.getObjectById('58b8a643560dcd5b601230fa');
                 if (creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }

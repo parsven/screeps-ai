@@ -108,8 +108,8 @@ module.exports = {
             {task: 'UpgraderAt1', cnt: 1, criteria: () => true},
             {task: 'UpgraderAt2', cnt: 1, criteria: () => true},
             {task: 'SourceContainerToUpgradeContainer', cnt: 2, criteria: () => true},
-  //          {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
-    //                && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
+      //      {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
+        //            && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
 
         ]
     },

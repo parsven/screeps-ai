@@ -18,6 +18,8 @@ const roleMineralhauler = require('./role.mineralhauler');
 const roleHarvester2 = require('./role.harvester2');
 const roleWallbuilder = require('./role.wallbuilder');
 const role2StationaryTowerCharger = require('./role2.stationaryTowerCharger');
+const role2DumpTo = require('./role2.dumpTo');
+const role2StationaryEnergyTransfer = require('./role2.stationaryEnergyTransfer');
 
 const roomE26S63 = require('./room.E26S63');
 const roomE25S63 = require('./room.E25S63');
@@ -99,6 +101,38 @@ const spawnLogic = function(spawnRoom, spawn) {
 };
 
 
+const dispatchSecondaryRoles = function(creep) {
+    const role2 = creep.memory.role2;
+    let roles2 = [role2];
+
+    if(!role2) {
+        return false;
+    }
+    if (_.isArray(role2)) {
+        roles2 = role2;
+    }
+
+    for (let i = 0; i<roles2.length ; i++) {
+        const r2 = roles2[i];
+     //   console.log("r2" + r2);
+        if (r2 == role2StationaryTowerCharger.role2) {
+            if (role2StationaryTowerCharger.run(creep)) {
+                return true;
+            }
+        } else if (r2 == role2DumpTo.role2) {
+            if (role2DumpTo.run(creep)) {
+                return true;
+            }
+        } else if(r2 == role2StationaryEnergyTransfer.role2) {
+            if( role2StationaryEnergyTransfer.run(creep)) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
+
 
 module.exports.loop = function () {
 // Garbage collect memory from dead creeps.
@@ -150,65 +184,66 @@ module.exports.loop = function () {
         }
 
         try {
-            if(creep.memory.role2 == role2StationaryTowerCharger.role2) {
-                if(role2StationaryTowerCharger.run(creep)) {
-                    continue;
-                }
+
+            if(dispatchSecondaryRoles(creep)) {
+                continue;
             }
 
-            if (creep.memory.role == 'harvester') {
-                roleHarvester.run(creep);
-            }
-            if (creep.memory.role == roleEnergyLoader.role) {
-                roleEnergyLoader.run(creep);
-            }
-            if (creep.memory.role == 'harvesterRemote') {
-                roleHarvesterRemote.run(creep);
-            }
-            if (creep.memory.role == 'upgrader') {
-                roleUpgrader.run(creep);
-            }
-            if (creep.memory.role == 'builder') {
-                roleBuilder.run(creep);
-            }
-            if (creep.memory.role == 'repairer') {
-                roleRepairer.run(creep);
-            }
-            if (creep.memory.role == 'towercharger') {
-                roleTowercharger.run(creep);
-            }
-            if (creep.memory.role == 'remoteMineAndBuilder') {
-                roleRemoteRepairAndBuilder.run(creep);
-            }
-            if (creep.memory.role == 'claimer') {
-                roleClaimer.run(creep);
-            }
-            if (creep.memory.role == roleMiner.role) {
-                roleMiner.run(creep);
-            }
-            if (creep.memory.role.substring(0,9) === roleUpgradeAt.role) {
-                roleUpgradeAt.run(creep);
-            }
-            if(creep.memory.role == roleContainerToContainer.role) {
-                roleContainerToContainer.run(creep);
-            }
-            if(creep.memory.role == roleAttackStructure.role) {
-                roleAttackStructure.run(creep);
-            }
-            if(creep.memory.role == roleRemoteClaim.role) {
-                roleRemoteClaim.run(creep);
-            }
-            if(creep.memory.role == roleHarvester2.role) {
-                roleHarvester2.run(creep);
-            }
-            if(creep.memory.role == roleWallbuilder.role) {
-                roleWallbuilder.run(creep);
-            }
-            if(creep.memory.role == roleMiner2.role) {
-                roleMiner2.run(creep);
-            }
-            if(creep.memory.role == roleMineralhauler.role) {
-                roleMineralhauler.run(creep);
+            switch(creep.memory.role) {
+                case 'harvester':
+                    roleHarvester.run(creep);
+                    break;
+                case roleEnergyLoader.role:
+                    roleEnergyLoader.run(creep);
+                    break;
+                case 'harvesterRemote':
+                    roleHarvesterRemote.run(creep);
+                    break;
+                case 'upgrader':
+                    roleUpgrader.run(creep);
+                    break;
+                case 'builder':
+                    roleBuilder.run(creep);
+                    break;
+                case 'repairer':
+                    roleRepairer.run(creep);
+                    break;
+                case 'towercharger':
+                    roleTowercharger.run(creep);
+                    break;
+                case 'remoteMineAndBuilder':
+                    roleRemoteRepairAndBuilder.run(creep);
+                    break;
+                case 'claimer':
+                    roleClaimer.run(creep);
+                    break;
+                case roleMiner.role:
+                    roleMiner.run(creep);
+                    break;
+                case roleUpgradeAt.role:
+                    roleUpgradeAt.run(creep);
+                    break;
+                case roleContainerToContainer.role:
+                    roleContainerToContainer.run(creep);
+                    break;
+                case roleAttackStructure.role:
+                    roleAttackStructure.run(creep);
+                    break;
+                case roleRemoteClaim.role:
+                    roleRemoteClaim.run(creep);
+                    break;
+                case roleHarvester2:
+                    roleHarvester2.run(creep);
+                    break;
+                case roleWallbuilder.role:
+                    roleWallbuilder.run(creep);
+                    break;
+                case roleMiner2.role:
+                    roleMiner2.run(creep);
+                    break;
+                case roleMineralhauler.role:
+                    roleMineralhauler.run(creep);
+                    break;
             }
         } catch (err) {
             console.log(err + err.stack);

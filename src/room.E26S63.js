@@ -279,8 +279,8 @@ module.exports = {
 
             , {task: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
             , {task: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
-          //  , {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
-     //  '77'         && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
+            , {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
+                && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
 
         ],
         fallback: {task: 'SmallHarvester', max: 2, always}

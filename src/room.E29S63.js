@@ -30,6 +30,8 @@ const roleEnergyLoader = require('./role.energyLoader');
 const roleWallBuilder = require('./role.wallbuilder');
 const roleContainerToContainer = require('./role.containerToContainer');
 const role2StationaryTowerCharger = require('./role2.stationaryTowerCharger');
+const role2DumpTo = require('./role2.dumpTo');
+const role2StationaryEnergyTransfer = require('./role2.stationaryEnergyTransfer');
 const towerLogic = require('./tower');
 
 
@@ -51,7 +53,10 @@ const containerAtRoomController = '58cc51e312a03d29648a358c';
 const posOfContainerAtRoomController = new RoomPosition(27,30, 'E29S63');
 
 const tower1Id = '58ca9ce9ad9fc25a25eb80e8';
+const tower2Id = '58d024f582b79471740e8feb';
 
+const linkAtStorage = '58d05ed766cb895a4a50e8fa';
+const linkAtRoomController = '58d0704dd8291064133ce40e';
 
 const build = function(typ, body, taskName) {
     const name = taskName + '-' + Game.time;
@@ -138,33 +143,35 @@ module.exports = {
         UpgraderAt1: {
             factory: () => {
                 const name = roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
-                    4,2,
+                    6,4,
                     containerAtRoomController,
                     '57ef9dff86f108ae6e60ea0b',
                     [new RoomPosition(28,30, 'E29S63')],
                     'UpgraderAt1');
                 if(name) {
-                    Memory.creeps[name].role2 = role2StationaryTowerCharger.role2;
+                    Memory.creeps[name].role2 = [role2StationaryTowerCharger.role2];
+                    role2StationaryEnergyTransfer.addAsAdditionalSecondaryRoleTo(name, linkAtRoomController, containerAtRoomController);
                 }
             }
         },
         UpgraderAt2: {
             factory: () => {
                 const name = roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
-                    5,3,
+                    6,4,
                     containerAtRoomController,
                     '57ef9dff86f108ae6e60ea0b',
                     [new RoomPosition(28,29, 'E29S63')],
                     'UpgraderAt2');
                 if(name) {
-                    Memory.creeps[name].role2 = role2StationaryTowerCharger.role2;
+                    Memory.creeps[name].role2 = [role2StationaryTowerCharger.role2];
+                    role2StationaryEnergyTransfer.addAsAdditionalSecondaryRoleTo(name, linkAtRoomController, containerAtRoomController);
                 }
             }
         },
         UpgraderAt3: {
             factory: () => {
                 const name = roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
-                    5,3,
+                    6,4,
                     containerAtRoomController,
                     '57ef9dff86f108ae6e60ea0b',
                     [new RoomPosition(27,29, 'E29S63')],
@@ -179,7 +186,7 @@ module.exports = {
             roleEnergyLoader.factory(Game.spawns['Spawn3'],
                 [CARRY, CARRY, CARRY,MOVE, MOVE, MOVE],
                 storageId,
-                new RoomPosition(44,45, 'E29S63'),
+                new RoomPosition(36,41, 'E29S63'),
                 'EnergyLoader')
             }
         },
@@ -194,14 +201,14 @@ module.exports = {
         },
         SourceContainerToStorage: {
             factory: () => {
-                roleContainerToContainer.factory(Game.spawns['Spawn3'],
+                const name = roleContainerToContainer.factory(Game.spawns['Spawn3'],
                     posOfContainerAtEnergySources,
                     containerAtEnergySources,
                     posOfStorage,
                     storageId,
                     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-                    'SourceContainerToStorage'
-                )
+                    'SourceContainerToStorage');
+                role2DumpTo.addAsSecondaryRoleTo(name, linkAtStorage);
             }
         }
     },
@@ -212,14 +219,14 @@ module.exports = {
             {task: 'EnergyLoader', cnt: 1, criteria: () => true},
             {task: 'Miner1', cnt: 1, criteria: () => true},
             {task: 'Miner2', cnt: 1, criteria: () => true},
-            {task: 'Container2Container', cnt: 4, criteria: () => true }, //Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] < 1800},
+   //         {task: 'Container2Container', cnt: 4, criteria: () => true }, //Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] < 1800},
      //       {task: 'Upgrader', cnt: 1, criteria: () => true},
             {task: 'SourceContainerToStorage', cnt:2, criteria: () => true},
             {task: 'UpgraderAt1', cnt: 1, criteria: () => true},
             {task: 'UpgraderAt2', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1000},
             {task: 'UpgraderAt3', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1800},
        //     {task: 'WallBuilder', cnt: 2, criteria: () => true },
-        //    {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 }
+            {task: 'Builder', cnt: 3, criteria: () => constructionSitesE29S63().length > 0 }
         ]
     },
 
@@ -247,7 +254,19 @@ module.exports = {
             console.log('No tower in this rooom!');
         }
 
+        const tower2 = Game.getObjectById(tower2Id);
+        if (tower2) {
+            if (!towerLogic.towerAttack(tower2) && Game.time % 2 == 1) {
+                towerLogic.towerRepair(tower2);
+            }
+        } else {
+            console.log('No tower in this rooom!');
+        }
 
+        const link = Game.getObjectById(linkAtStorage);
+        if(link.energy == link.energyCapacity) {
+            link.transferEnergy(Game.getObjectById(linkAtRoomController))
+        }
 
     }
 
