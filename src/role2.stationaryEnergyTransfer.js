@@ -25,7 +25,7 @@ module.exports= {
         }
 
         const destStructure = Game.getObjectById(creep.memory.stationaryEnergyTransfer_dest);
-        if(creep.carry.energy > 0.8 * creep.carryCapacity && destStructure.store.energy < 1951) {
+        if(creep.carry.energy > 0.2 * creep.carryCapacity && destStructure.store.energy < 1951) {
             creep.transfer(destStructure, RESOURCE_ENERGY);
             creep.say("b");
             return true;

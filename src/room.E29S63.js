@@ -3,6 +3,9 @@
 const roleBuilder = require('./role.builder');
 
 
+//122,631
+//kl 2007
+
 /*
  * Masterplan:
  *
@@ -157,7 +160,7 @@ module.exports = {
         UpgraderAt2: {
             factory: () => {
                 const name = roleUpgraderAt.factory(roleUpgraderAt.role, Game.spawns['Spawn3'],
-                    6,4,
+                    5,4,
                     containerAtRoomController,
                     '57ef9dff86f108ae6e60ea0b',
                     [new RoomPosition(28,29, 'E29S63')],

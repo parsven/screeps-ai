@@ -191,7 +191,7 @@ module.exports = {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn1'],
-                    4, 3,
+                    5, 4,
                     containerAboveLeftOfRoomControlerId,
                     roomControllerId,
                     [new RoomPosition(16, 24, 'E26S63')],
@@ -290,7 +290,7 @@ module.exports = {
     towerRun: () => {
         const tower = getTower();
         const tower2 = getTower2();
-        const tower3 = getTower2();
+        const tower3 = getTower3();
 
         if(tower) {
             if(!towerLogic.towerAttack(tower) && Game.time % 2 == 0) {
