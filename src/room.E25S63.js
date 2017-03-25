@@ -8,7 +8,10 @@ const roleUpgraderAt = require('./role.upgradeAt');
 const roleContainerToContainer = require('./role.containerToContainer');
 const roleMiner2 = require('./role.miner2');
 
+const role2StationaryDumpToLink = require('./role2.stationaryDumpToLink');
 
+const linkAtSource = '58d6374ec92b7f05dd690fe7';
+const linkAtController = '58d2e26d83e8646d69257ba4';
 
 const towerId = '58b32e405ebfe4af390a6e4d';
 const tower2Id = '58bb06a5e962dead60f200c1';
@@ -16,6 +19,8 @@ const tower2Id = '58bb06a5e962dead60f200c1';
 
 const containerAtRoomController = '58b5dd69acca48f132708228';
 const containerAtEnergySource = '58af8d5fdb3b7b23072eed6f';
+
+const storage = '58b8a643560dcd5b601230fa';
 
 const mineralContainer = '58c89659945f9d612466c1de';
 const mineralSource = '57efa013195b160f02c75404';
@@ -33,7 +38,7 @@ module.exports = {
                 const memory = {
                     role: energyLoader.role,
                     containerLevel: 1,
-                    containerId: containerAtEnergySource,
+                    containerId: storage,
                     spawnRoom: spawn.room.name,
                     taskName: 'EnergyLoader'
                 };
@@ -47,11 +52,14 @@ module.exports = {
             }
         },
         Miner: {
-            factory: () => roleMiner.maxFactory(
-                Game.spawns['Spawn2'],
-                module.exports.sourceId,
-                [new RoomPosition(20, 41, module.exports.roomName)],
-                'Miner')
+            factory: () => {
+                const name = roleMiner.maxFactory(
+                    Game.spawns['Spawn2'],
+                    module.exports.sourceId,
+                    [new RoomPosition(20, 41, module.exports.roomName)],
+                    'Miner', 10000);
+                role2StationaryDumpToLink.addAsAdditionalSecondaryRoleTo(name, linkAtSource)
+            }
         },
         MinerMineral: {
             factory: () => {
@@ -63,11 +71,13 @@ module.exports = {
         },
         UpgraderAt1: {
             factory: () => {
+
+                const strong = storage.energy > 200000;
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn2'],
-                    3, 2,
-                    containerAtRoomController, //ContainerId
+                    strong ? 4 : 3, 2,
+                    linkAtController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(37, 28, 'E25S63')],
                     'UpgraderAt1',
@@ -80,23 +90,23 @@ module.exports = {
                     roleUpgraderAt.role,
                     Game.spawns['Spawn2'],
                     4, 3,
-                    containerAtRoomController, //ContainerId
+                    linkAtController, //ContainerId
                     '57ef9df386f108ae6e60e8d6',
                     [new RoomPosition(36, 28, 'E25S63')],
                     'UpgraderAt2',
                     16);
             }
         },
-        SourceContainerToUpgradeContainer: {
+        SourceContainerToStorage: {
             factory: () => {
                 roleContainerToContainer.factory(
                     Game.spawns['Spawn2'],
                     new RoomPosition(20,41,'E25S63'),
                     '58af8d5fdb3b7b23072eed6f',
-                    new RoomPosition(36,29,'E25S63'),
-                    '58b5dd69acca48f132708228',
-                    [CARRY, CARRY, CARRY, MOVE, MOVE],
-                    "SourceContainerToUpgradeContainer"
+                    new RoomPosition(18,39,'E25S63'),
+                    storage,
+                    [CARRY, MOVE],
+                    "SourceContainerToStorage"
                 );
             }
         }
@@ -107,7 +117,7 @@ module.exports = {
             {task: 'EnergyLoader', cnt: 1, criteria: () => true},
             {task: 'UpgraderAt1', cnt: 1, criteria: () => true},
             {task: 'UpgraderAt2', cnt: 1, criteria: () => true},
-            {task: 'SourceContainerToUpgradeContainer', cnt: 2, criteria: () => true},
+            {task: 'SourceContainerToStorage', cnt: 1, criteria: () => true},
       //      {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
         //            && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
 
@@ -134,6 +144,10 @@ module.exports = {
             console.log('No tower in this rooom!');
         }
 
+        const link = Game.getObjectById(linkAtSource);
+        if(link.energy > 250) {
+            link.transferEnergy(Game.getObjectById(linkAtController))
+        }
 
 
     }

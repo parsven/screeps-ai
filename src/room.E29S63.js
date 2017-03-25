@@ -229,7 +229,7 @@ module.exports = {
             {task: 'UpgraderAt2', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1000},
             {task: 'UpgraderAt3', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1800},
        //     {task: 'WallBuilder', cnt: 2, criteria: () => true },
-            {task: 'Builder', cnt: 3, criteria: () => constructionSitesE29S63().length > 0 }
+            {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 }
         ]
     },
 

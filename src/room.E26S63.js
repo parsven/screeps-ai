@@ -191,7 +191,7 @@ module.exports = {
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn1'],
-                    5, 4,
+                    3, 4,
                     containerAboveLeftOfRoomControlerId,
                     roomControllerId,
                     [new RoomPosition(16, 24, 'E26S63')],
@@ -275,12 +275,12 @@ module.exports = {
             , {task: 'StorageToUpgradeContainer', cnt: 1, criteria: () => true }
             , {task: 'UpgraderAt4', cnt: 1, criteria: () => true }
 
-            , {task: 'WallBuilder', cnt: 1, criteria: () => true }
+   //         , {task: 'WallBuilder', cnt: 1, criteria: () => true }
 
-            , {task: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
+       //     , {task: 'RemoteMineAndBuilder', cnt: 1, criteria: () => constructionSitesE25S63().length > 0}
             , {task: 'Builder', cnt: 1, criteria: () => constructionSitesE26S63().length > 0}
-            , {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
-                && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
+    //        , {task: 'MinerMineral', cnt: 1, criteria: () => (Game.getObjectById(mineralSource).mineralAmount > 0
+      //          && _.sum(Game.getObjectById(mineralContainer).store) < 1600)}
 
         ],
         fallback: {task: 'SmallHarvester', max: 2, always}

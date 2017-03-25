@@ -20,6 +20,7 @@ const roleWallbuilder = require('./role.wallbuilder');
 const role2StationaryTowerCharger = require('./role2.stationaryTowerCharger');
 const role2DumpTo = require('./role2.dumpTo');
 const role2StationaryEnergyTransfer = require('./role2.stationaryEnergyTransfer');
+const role2StationaryDumpToLink = require('./role2.stationaryDumpToLink');
 
 const roomE26S63 = require('./room.E26S63');
 const roomE25S63 = require('./room.E25S63');
@@ -115,16 +116,20 @@ const dispatchSecondaryRoles = function(creep) {
     for (let i = 0; i<roles2.length ; i++) {
         const r2 = roles2[i];
      //   console.log("r2" + r2);
-        if (r2 == role2StationaryTowerCharger.role2) {
+        if (r2 === role2StationaryTowerCharger.role2) {
             if (role2StationaryTowerCharger.run(creep)) {
                 return true;
             }
-        } else if (r2 == role2DumpTo.role2) {
+        } else if (r2 === role2DumpTo.role2) {
             if (role2DumpTo.run(creep)) {
                 return true;
             }
-        } else if(r2 == role2StationaryEnergyTransfer.role2) {
+        } else if(r2 === role2StationaryEnergyTransfer.role2) {
             if( role2StationaryEnergyTransfer.run(creep)) {
+                return true;
+            }
+        } else if(r2 === role2StationaryDumpToLink.role2) {
+            if(role2StationaryDumpToLink.run(creep)) {
                 return true;
             }
         }
@@ -147,7 +152,7 @@ module.exports.loop = function () {
         let logStr = "======== E26S63 =================\n"
             + spawnLogic(roomE26S63, Game.spawns['Spawn1']);
         console.log(logStr);
-        if(cntCreepsOfType('harvester') == 0) {
+        if(cntCreepsOfType('harvester') === 0) {
 //            makeSmallHarvester();
         }
     }
@@ -157,7 +162,7 @@ module.exports.loop = function () {
         let logStr = "======== E25S63 =================\n"
             + spawnLogic(roomE25S63, Game.spawns['Spawn2']);
         console.log(logStr);
-        if(cntCreepsOfType('harvester') == 0) {
+        if(cntCreepsOfType('harvester') === 0) {
   //          makeSmallHarvester();
         }
     }
@@ -167,7 +172,7 @@ module.exports.loop = function () {
         let logStr = "======== E29S63 =================\n"
             + spawnLogic(roomE29S63, Game.spawns['Spawn3']);
         console.log(logStr);
-        if(cntCreepsOfType('harvester') == 0) {
+        if(cntCreepsOfType('harvester') === 0) {
             //          makeSmallHarvester();
         }
     }
