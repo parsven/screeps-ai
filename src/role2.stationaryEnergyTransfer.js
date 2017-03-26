@@ -3,11 +3,15 @@ module.exports= {
     role2: 'stationaryEnergyTransfer',
 
 
-    addAsAdditionalSecondaryRoleTo: function(creepName, source, dest) {
+    addAsAdditionalSecondaryRoleTo: function(creepName, source, dest, ignoreLevel) {
         if (creepName) {
+            if(Memory.creeps[creepName].role2 === undefined) {
+                Memory.creeps[creepName].role2 = [];
+            }
             Memory.creeps[creepName].role2.push(this.role2);
             Memory.creeps[creepName].stationaryEnergyTransfer_source = source;
             Memory.creeps[creepName].stationaryEnergyTransfer_dest = dest;
+            Memory.creeps[creepName].stationaryEnergyTransfer_ignoreLevel = ignoreLevel;
         }
     },
 
@@ -25,7 +29,11 @@ module.exports= {
         }
 
         const destStructure = Game.getObjectById(creep.memory.stationaryEnergyTransfer_dest);
-        if(creep.carry.energy > 0.2 * creep.carryCapacity && destStructure.store.energy < 1951) {
+        let goodLevel = destStructure.store.energy < 1951;
+        if(creep.memory.stationaryEnergyTransfer_ignoreLevel === true) {
+           goodLevel = true;
+        }
+        if(creep.carry.energy > 0.2 * creep.carryCapacity && goodLevel) {
             creep.transfer(destStructure, RESOURCE_ENERGY);
             creep.say("b");
             return true;

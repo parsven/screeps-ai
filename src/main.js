@@ -21,6 +21,7 @@ const role2StationaryTowerCharger = require('./role2.stationaryTowerCharger');
 const role2DumpTo = require('./role2.dumpTo');
 const role2StationaryEnergyTransfer = require('./role2.stationaryEnergyTransfer');
 const role2StationaryDumpToLink = require('./role2.stationaryDumpToLink');
+const roleMoveTo = require('./role.moveTo');
 
 const roomE26S63 = require('./room.E26S63');
 const roomE25S63 = require('./room.E25S63');
@@ -248,6 +249,9 @@ module.exports.loop = function () {
                     break;
                 case roleMineralhauler.role:
                     roleMineralhauler.run(creep);
+                    break;
+                case roleMoveTo.role:
+                    roleMoveTo.run(creep);
                     break;
             }
         } catch (err) {

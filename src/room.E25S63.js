@@ -72,7 +72,7 @@ module.exports = {
         UpgraderAt1: {
             factory: () => {
 
-                const strong = storage.energy > 200000;
+                const strong = storage.store[RESOURCE_ENERGY]> 200000;
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn2'],
