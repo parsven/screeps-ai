@@ -276,7 +276,7 @@ module.exports = {
     //        {task: 'WallBuilder', cnt: 1, criteria: () => true },
             {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 },
 
-            {task: 'Upgrader1', cnt:2 , criteria: () =>true},
+     //       {task: 'Upgrader1', cnt:2 , criteria: () =>true},
     //        {task: 'RemoteWallBuilder', cnt:1 ,criteria: ()=>true},
             {task: 'RemoteBuilder', cnt:2, criteria: ()=> constructionSitesE29S64().length > 0 }
         ]
