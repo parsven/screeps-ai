@@ -36,13 +36,13 @@ function initMission(nameOfMission, sourceToMine, posOfSourceContainer, spawn, d
 function findContainer(m) {
     const sourcePos = new RoomPosition(m.posOfSource.x, m.posOfSource.y, m.posOfSource.roomName);
 
-/*    const room = Game.rooms[m.posOfSource.roomName];
+    const room = Game.rooms[m.posOfSource.roomName];
     if(!room) {
         const container = Game.getObjectById(m.sourceContainerId);
         console.log("container:" + JSON.stringify(container, null,2));
         return container;
     }
-*/
+
     const atSourcePos = Game.rooms[m.posOfSource.roomName].lookForAt(LOOK_STRUCTURES, sourcePos);
     if(atSourcePos && atSourcePos.length > 0) {
         const containerReady =  atSourcePos[0].structureType === STRUCTURE_CONTAINER;
