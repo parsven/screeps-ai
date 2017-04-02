@@ -93,9 +93,7 @@ var roleEnergyLoader = {
                 } else {
                     //  const dest = spawn.room.controller;
                     let dest = creep.room.find(FIND_MY_SPAWNS)[0];
-                    console.log("aaa");
                     if(Game.flags['Fallback2']) {
-                        console.log("bbb");
                         dest = Game.flags['Callback2'];
                     }
                     const r = creep.moveTo(dest);

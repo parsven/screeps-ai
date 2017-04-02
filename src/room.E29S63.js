@@ -45,6 +45,9 @@ const constructionSitesE29S63 = () => Object.keys(Game.constructionSites).filter
     return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E29S63';
 });
 
+const constructionSitesE29S64 = () => Object.keys(Game.constructionSites).filter((siteKey) => {
+    return Game.constructionSites[siteKey].room && Game.constructionSites[siteKey].room.name === 'E29S64';
+});
 
 const sourceUp = '57ef9dff86f108ae6e60ea0c';
 const sourceDown = '57ef9dff86f108ae6e60ea0d';
@@ -124,7 +127,7 @@ module.exports = {
         WallBuilder: {
             factory: () => {
                 roleWallBuilder.factory(Game.spawns['Spawn3'], [MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY],
-                    storageId, 'aaaTTT', 'WallBuilder');
+                    containerAtRoomController, 'Flag133', 'WallBuilder');
             }
         },
 
@@ -195,7 +198,7 @@ module.exports = {
             roleEnergyLoader.factory(Game.spawns['Spawn3'],
                 [CARRY, CARRY, CARRY,MOVE, MOVE, MOVE],
                 storageId,
-                new RoomPosition(36,41, 'E29S63'),
+                new RoomPosition(36,42, 'E29S63'),
                 'EnergyLoader')
             }
         },
@@ -225,6 +228,35 @@ module.exports = {
                 const name = roleMoveTo.factory(Game.spawns['Spawn3'], new RoomPosition(37,41,'E29S63'), 'EnergyTransfer');
                 role2StationaryEnergyTransfer.addAsAdditionalSecondaryRoleTo(name, linkAtStorage, storageId, true);
             }
+        },
+        Upgrader1: {
+            factory:() => {
+                const sourceDown = '57ef9dff86f108ae6e60ea10';
+                const harvestPosUp = new RoomPosition(38,9, 'E29S64');
+                roleUpgrader.factory(Game.spawns['Spawn3'], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, WORK, WORK, WORK],sourceDown, 'Upgrader1',harvestPosUp);
+            }
+        },
+        RemoteBuilder: {
+            factory: ()=> {
+                Game.spawns['Spawn3'].createCreep([MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY],
+                    "remoteBuild" + Game.time,
+                    {role: 'remoteMineAndBuilder',
+                        spawnRoom: Game.spawns['Spawn3'].room.name,
+                        taskName: 'RemoteBuilder'
+                    }
+
+                );
+            }
+        },
+        RemoteWallBuilder: {
+            factory: () => {
+                const sourceDown = '57ef9dff86f108ae6e60ea10';
+                roleWallBuilder.factory(Game.spawns['Spawn3']
+                , [MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY],
+                sourceDown,
+                'Flag92',
+                   'RemoteWallBuilder');
+            }
         }
     },
 
@@ -241,8 +273,12 @@ module.exports = {
             {task: 'UpgraderAt1', cnt: 1, criteria: () => true},
             {task: 'UpgraderAt2', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1000},
             {task: 'UpgraderAt3', cnt: 1, criteria: () => Game.getObjectById(containerAtRoomController).store[RESOURCE_ENERGY] > 1800},
-       //     {task: 'WallBuilder', cnt: 2, criteria: () => true },
-            {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 }
+    //        {task: 'WallBuilder', cnt: 1, criteria: () => true },
+            {task: 'Builder', cnt: 1, criteria: () => constructionSitesE29S63().length > 0 },
+
+            {task: 'Upgrader1', cnt:2 , criteria: () =>true},
+    //        {task: 'RemoteWallBuilder', cnt:1 ,criteria: ()=>true},
+            {task: 'RemoteBuilder', cnt:2, criteria: ()=> constructionSitesE29S64().length > 0 }
         ]
     },
 

@@ -23,9 +23,12 @@ const role2StationaryEnergyTransfer = require('./role2.stationaryEnergyTransfer'
 const role2StationaryDumpToLink = require('./role2.stationaryDumpToLink');
 const roleMoveTo = require('./role.moveTo');
 
+const missionRemoteMiningWithContainer = require('./mission.remoteMiningWithContainer');
+
 const roomE26S63 = require('./room.E26S63');
 const roomE25S63 = require('./room.E25S63');
 const roomE29S63 = require('./room.E29S63');
+const roomE29S64 = require('./room.E29S64');
 
 const util = require('./util');
 
@@ -178,9 +181,27 @@ module.exports.loop = function () {
         }
     }
 
+    if(Game.time % 10 === 3 && Game.spawns['Spawn4'].spawning === null)
+    {
+        let logStr = "======== E29S64 =================\n"
+            + spawnLogic(roomE29S64, Game.spawns['Spawn4']);
+        console.log(logStr);
+        if(cntCreepsOfType('harvester') === 0) {
+            //          makeSmallHarvester();
+        }
+    }
+
     roomE26S63.towerRun();
     roomE25S63.towerRun();
     roomE29S63.towerRun();
+    roomE29S64.towerRun();
+
+
+    try {
+        missionRemoteMiningWithContainer.run();
+    } catch (err) {
+        console.log(err + err.stack);
+    }
 
     for(let name in Game.creeps) {
         const creep = Game.creeps[name];
@@ -238,7 +259,7 @@ module.exports.loop = function () {
                 case roleRemoteClaim.role:
                     roleRemoteClaim.run(creep);
                     break;
-                case roleHarvester2:
+                case roleHarvester2.role:
                     roleHarvester2.run(creep);
                     break;
                 case roleWallbuilder.role:

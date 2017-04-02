@@ -71,8 +71,7 @@ module.exports = {
         },
         UpgraderAt1: {
             factory: () => {
-
-                const strong = storage.store[RESOURCE_ENERGY]> 200000;
+                const strong = Game.getObjectById(storage).store[RESOURCE_ENERGY]> 200000;
                 roleUpgraderAt.factory(
                     roleUpgraderAt.role,
                     Game.spawns['Spawn2'],
@@ -101,7 +100,7 @@ module.exports = {
             factory: () => {
                 roleContainerToContainer.factory(
                     Game.spawns['Spawn2'],
-                    new RoomPosition(20,41,'E25S63'),
+                    new RoomPosition(19,41,'E25S63'),
                     '58af8d5fdb3b7b23072eed6f',
                     new RoomPosition(18,39,'E25S63'),
                     storage,

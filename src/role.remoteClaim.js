@@ -28,6 +28,9 @@ module.exports = {
             return;
         }
         const m = creep.memory;
+        m.working = true;
+
+        console.log("Working?" + m.working);
         if(m.working) {
             const roomController = Game.getObjectById(m.roomController);
             const res = creep.claimController(roomController);

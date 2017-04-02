@@ -41,7 +41,7 @@ const roleUpgrader = {
                 creep.repair(brokenStructures[0]);
             } else {
                 if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(Game.flags['Flag18'], {reusePath: 1, visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(Game.flags['Flag19'], {reusePath: 1, visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }

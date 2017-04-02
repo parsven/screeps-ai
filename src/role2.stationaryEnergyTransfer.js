@@ -17,7 +17,7 @@ module.exports= {
 
     run: function (creep) {
         const sourceStructure = Game.getObjectById(creep.memory.stationaryEnergyTransfer_source);
-        console.log("sourceStructure.energy" + sourceStructure.energy);
+//        console.log("sourceStructure.energy" + sourceStructure.energy);
         if(!creep.pos.isNearTo(sourceStructure)) {
             return false;
         }
