@@ -33,7 +33,7 @@ module.exports= {
         if(creep.memory.stationaryEnergyTransfer_ignoreLevel === true) {
            goodLevel = true;
         }
-        if(creep.carry.energy > 0.2 * creep.carryCapacity && goodLevel) {
+        if(creep.carry.energy >= 0.2 * creep.carryCapacity && goodLevel) {
             creep.transfer(destStructure, RESOURCE_ENERGY);
             creep.say("b");
             return true;
